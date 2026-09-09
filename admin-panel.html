@@ -690,29 +690,21 @@
             // LÍNEA DECORATIVA
             addSeparator();
 
-            // INTRODUCCIÓN PERSONAL
-            doc.setFont(undefined, 'bold');
-            doc.setFontSize(14);
-            doc.setTextColor(212, 200, 142);
-            doc.text('Tu Transformación Comienza Aquí', marginX, y);
-            y += 8;
-
+            // NIVEL 1: GANCHO EMOCIONAL
+            addSectionTitle('🎯', 'Tu Transformación Comienza Aquí');
             doc.setFont(undefined, 'normal');
             doc.setFontSize(11);
-            doc.setTextColor(80, 80, 80);
-            const introText = `Este plan ha sido diseñado específicamente para ti. No es genérico. Es tuyo. Cada ejercicio, cada día, cada semana ha sido planificado para tus objetivos y tu disponibilidad.`;
-            const introLines = doc.splitTextToSize(introText, 160);
+            doc.setTextColor(...colorDark);
+            const introText = `Este plan es 100% TUYO. No es genérico. Cada ejercicio, cada día, cada semana ha sido planificado ESPECÍFICAMENTE para ti, tus objetivos y tu disponibilidad.`;
+            const introLines = doc.splitTextToSize(introText, 155);
             doc.text(introLines, marginX + 2, y);
-            y += introLines.length * 5 + 8;
+            y += introLines.length * 5.5 + 10;
 
-            // INFORMACIÓN DEL PLAN
-            doc.setFont(undefined, 'bold');
-            doc.setFontSize(13);
-            doc.setTextColor(90, 111, 94);
-            doc.text('Tu Plan de Entrenamiento', marginX, y);
-            y += 8;
+            // NIVEL 2: TU PLAN
+            addSectionTitle('🌱', 'Tu Plan de Entrenamiento');
 
             const planLabel = plan === 'principiante' ? 'Principiante' : plan === 'intermedio' ? 'Intermedio' : 'Avanzado';
+            const planEmoji = plan === 'principiante' ? '🌱' : plan === 'intermedio' ? '💪' : '⭐';
             const planDesc = {
                 'principiante': '¿Comienzas en pilates? Perfecto. En 4-6 semanas verás cambios reales.',
                 'intermedio': '¿Ya practicas pilates? Ahora viene la transformación. Visible en 2-4 semanas.',
@@ -720,20 +712,20 @@
             };
 
             doc.setFont(undefined, 'bold');
-            doc.setFontSize(11);
-            doc.setTextColor(212, 200, 142);
-            doc.text(`Plan ${planLabel}`, marginX + 2, y);
-            y += 5;
-
-            doc.setFont(undefined, 'normal');
-            doc.setFontSize(9);
-            doc.setTextColor(110, 110, 110);
-            doc.text(planDesc[plan], marginX + 4, y);
-            y += 6;
+            doc.setFontSize(12);
+            doc.setTextColor(...colorGold);
+            doc.text(`${planEmoji} Plan ${planLabel}`, marginX + 2, y);
+            y += 7;
 
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
-            doc.setTextColor(80, 80, 80);
+            doc.setTextColor(...colorGray);
+            doc.text(planDesc[plan], marginX + 2, y);
+            y += 7;
+
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(...colorDark);
             doc.text(`• ${days} días/semana  |  ${duration} minutos/sesión`, marginX + 2, y);
             y += 5;
 
@@ -743,10 +735,9 @@
 
             const goalsLabel = OBJETIVOS_INFO[goals]?.titulo || goals;
             doc.text(`• Objetivo: ${goalsLabel}`, marginX + 2, y);
-            y += 5;
-            y += 8;
+            y += 10;
 
-            // HORARIOS DISPONIBLES DEL DUEÑO
+            // NIVEL 3: DISPONIBILIDAD
             const selectedDays = [];
             ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'].forEach(day => {
                 const checkbox = document.getElementById(`day-${day}`);
@@ -756,14 +747,15 @@
             });
 
             if (selectedDays.length > 0) {
-                doc.setFont(undefined, 'bold');
-                doc.setFontSize(11);
-                doc.setTextColor(90, 111, 94);
-                doc.text('Disponibilidad: ' + selectedDays.join(', '), marginX, y);
-                y += 7;
+                addSectionTitle('📅', 'Disponibilidad');
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(10);
+                doc.setTextColor(...colorDark);
+                doc.text(selectedDays.join(', '), marginX + 2, y);
+                y += 10;
             }
 
-            // COTIZACIÓN PROFESIONAL
+            // NIVEL 5: INVERSIÓN
             const hourlyRate = parseFloat(document.getElementById('hourly-rate').value) || 50;
             const discountPercent = parseFloat(document.getElementById('discount-percent').value) || 0;
             const daysNum = parseInt(days);
@@ -773,7 +765,6 @@
             const hoursPerMonth = sessionsPerMonth * durationInHours;
             const pilatesSubtotal = hoursPerMonth * hourlyRate;
 
-            // Detectar si hay nutrición
             const hasNutrition = currentConsultation && currentConsultation.items &&
                                 currentConsultation.items.some(item => item.includes('servicio-nutricion') || item.includes('plan-combinado'));
             const nutritionPrice = hasNutrition ? 60 : 0;
@@ -781,15 +772,11 @@
             const discountAmount = subtotal * (discountPercent / 100);
             const total = subtotal - discountAmount;
 
-            doc.setFont(undefined, 'bold');
-            doc.setFontSize(13);
-            doc.setTextColor(90, 111, 94);
-            doc.text('Tu Inversión en Transformación', marginX, y);
-            y += 8;
+            addSectionTitle('💰', 'Tu Inversión en Transformación');
 
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
-            doc.setTextColor(80, 80, 80);
+            doc.setTextColor(...colorDark);
             doc.text(`• Sesiones Pilates: ${sessionsPerMonth} × $${(hourlyRate * durationInHours).toFixed(2)} = $${pilatesSubtotal.toFixed(2)}/mes`, marginX + 2, y);
             y += 5;
 
@@ -800,7 +787,7 @@
 
             doc.setFont(undefined, 'bold');
             doc.setFontSize(10);
-            doc.setTextColor(110, 110, 110);
+            doc.setTextColor(...colorGray);
             doc.text(`Subtotal: $${subtotal.toFixed(2)}`, marginX + 2, y);
             y += 6;
 
@@ -810,25 +797,16 @@
                 y += 6;
             }
 
-            // Línea decorativa simple
-            doc.setDrawColor(212, 200, 142);
-            doc.setLineWidth(1);
-            doc.line(marginX + 2, y, marginR - 2, y);
-            y += 6;
+            addSeparator();
 
-            doc.setFont(undefined, 'bold');
-            doc.setFontSize(12);
-            doc.setTextColor(212, 200, 142);
-            doc.text(`Total mensual: $${total.toFixed(2)}`, marginX + 2, y);
-            y += 8;
-            doc.setTextColor(80, 80, 80);
-
-            // RESULTADOS QUE VAS A VER
             doc.setFont(undefined, 'bold');
             doc.setFontSize(13);
-            doc.setTextColor(90, 111, 94);
-            doc.text('Lo que Verás (Resultados Reales)', marginX, y);
-            y += 8;
+            doc.setTextColor(...colorGold);
+            doc.text(`Total mensual: $${total.toFixed(2)}`, marginX + 2, y);
+            y += 12;
+
+            // NIVEL 4: RESULTADOS (EL VENDEDOR)
+            addSectionTitle('✨', 'Lo que Verás (Resultados Reales)');
 
             const resultsByWeek = {
                 'principiante': [
@@ -850,23 +828,19 @@
 
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
-            doc.setTextColor(80, 80, 80);
+            doc.setTextColor(...colorDark);
             (resultsByWeek[plan] || resultsByWeek['principiante']).forEach(r => {
                 doc.text(`• ${r}`, marginX + 2, y);
                 y += 6;
             });
-            y += 3;
-
-            // BENEFICIOS CLAVE
-            doc.setFont(undefined, 'bold');
-            doc.setFontSize(13);
-            doc.setTextColor(90, 111, 94);
-            doc.text('Esto Incluye Tu Plan', marginX, y);
             y += 8;
+
+            // BENEFICIOS
+            addSectionTitle('✓', 'Esto Incluye Tu Plan');
 
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
-            doc.setTextColor(80, 80, 80);
+            doc.setTextColor(...colorDark);
             const benefits = [
                 `${sessionsPerMonth} sesiones de pilates en vivo`,
                 'Acceso a biblioteca de ejercicios 24/7',
@@ -876,63 +850,57 @@
             ];
             benefits.forEach(b => {
                 doc.text(`• ${b}`, marginX + 2, y);
-                y += 6;
+                y += 5;
             });
-            y += 3;
+            y += 8;
 
-            // NOTAS ESPECIALES SI LAS HAY
-            if (notes) {
-                addSection('Consideraciones Especiales');
-                const notesLines = doc.splitTextToSize(notes, 160);
-                doc.text(notesLines, marginX + 2, y);
-                y += notesLines.length * 5 + 5;
-            }
-
-            // LLAMADO A ACCIÓN
+            // NUEVA PÁGINA SI ES NECESARIO
             if (y > 240) {
                 doc.addPage();
                 y = 20;
             }
 
-            doc.setFont(undefined, 'bold');
-            doc.setFontSize(13);
-            doc.setTextColor(90, 111, 94);
-            doc.text('Tus Próximos Pasos', marginX, y);
-            y += 8;
+            // NIVEL 6: ACCIÓN (CTA)
+            addSectionTitle('🚀', 'Comienza Tu Transformación Hoy');
 
-            doc.setFont(undefined, 'normal');
+            doc.setFont(undefined, 'bold');
             doc.setFontSize(10);
-            doc.setTextColor(80, 80, 80);
-            doc.text('1. Elige tu horario preferido', marginX + 2, y);
+            doc.setTextColor(...colorDark);
+
+            doc.text('1️⃣  Elige tu horario', marginX + 2, y);
             y += 5;
-            doc.text('2. Confirma el pago de $' + total.toFixed(2) + ' por el primer mes', marginX + 2, y);
+            doc.text('2️⃣  Confirma el pago ($' + total.toFixed(2) + ')', marginX + 2, y);
             y += 5;
-            doc.text('3. Recibe instrucciones de acceso y link a plataforma', marginX + 2, y);
+            doc.text('3️⃣  Recibe tu acceso + instrucciones', marginX + 2, y);
             y += 5;
-            doc.text('4. Comienza tu transformación en tu próxima semana disponible', marginX + 2, y);
+            doc.text('4️⃣  Comienza en tu próxima semana', marginX + 2, y);
             y += 12;
+
+            addSeparator();
 
             doc.setFont(undefined, 'bold');
             doc.setFontSize(11);
-            doc.setTextColor(90, 111, 94);
+            doc.setTextColor(...colorDark);
             doc.text('¿Preguntas? Contactame sin compromiso:', marginX, y);
             y += 8;
 
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
-            doc.setTextColor(212, 200, 142);
-            doc.text('WhatsApp: +39 389 1131525 (respondo en 1 hora)', marginX + 2, y);
-            y += 5;
-            doc.setTextColor(130, 130, 130);
-            doc.text('Email: aranircamar1@gmail.com', marginX + 2, y);
+            doc.setTextColor(...colorPrimary);
+            doc.text('📱 WhatsApp: +39 389 1131525', marginX + 2, y);
+            doc.setTextColor(...colorGray);
+            doc.text('(respondo en 1 hora)', marginX + 2, y + 4);
+            y += 10;
 
-            // FOOTER DECORATIVO
-            doc.setDrawColor(212, 200, 142);
-            doc.setLineWidth(0.5);
-            doc.line(marginX, doc.internal.pageSize.getHeight() - 15, marginR, doc.internal.pageSize.getHeight() - 15);
+            doc.setTextColor(...colorDark);
+            doc.text('📧 Email: aranircamar1@gmail.com', marginX + 2, y);
+            y += 8;
+
+            // FOOTER
+            addSeparator();
             doc.setFont(undefined, 'normal');
-            doc.setFontSize(7);
-            doc.setTextColor(150, 150, 150);
+            doc.setFontSize(8);
+            doc.setTextColor(...colorGray);
             doc.text('ARA TRAINER | Transformación mediante Pilates Personalizado', marginX, doc.internal.pageSize.getHeight() - 10);
 
             // Guardar PDF
