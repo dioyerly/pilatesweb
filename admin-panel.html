@@ -296,8 +296,11 @@
             }
         }
 
+        // Importar ejercicios
+        const { EJERCICIOS_DB, OBJETIVOS_INFO, HORARIOS_RECOMENDADOS } = await import('./js/ejercicios.js');
+
         // Generar PDF
-        window.generatePDF = () => {
+        window.generatePDF = async () => {
             const plan = document.getElementById('plan-select').value;
             const days = document.getElementById('days-select').value;
             const duration = document.getElementById('duration-select').value;
@@ -310,11 +313,167 @@
                 return;
             }
 
-            // Generar PDF (aquí iría la lógica de jsPDF)
-            // Por ahora, mostrar mensaje de éxito
-            showSuccess('PDF generado exitosamente. Descargando...');
+            if (!window.jspdf) {
+                showError('jsPDF no está disponible');
+                return;
+            }
 
-            // TODO: Implementar generación real de PDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const marginX = 20;
+            const marginR = pageWidth - 20;
+            let y = 15;
+
+            // HEADER con logo
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(28);
+            doc.setTextColor(90, 111, 94); // Verde oscuro
+            doc.text('ARA TRAINER', marginX, y);
+            y += 10;
+
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(11);
+            doc.setTextColor(107, 114, 128);
+            doc.text('Plan Personalizado de Pilates', marginX, y);
+            y += 12;
+
+            // LÍNEA DIVISORIA
+            doc.setDrawColor(212, 200, 142); // Crema
+            doc.setLineWidth(1);
+            doc.line(marginX, y, marginR, y);
+            y += 8;
+
+            // INFORMACIÓN DEL CLIENTE
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(12);
+            doc.setTextColor(31, 41, 55);
+            doc.text('Información del Plan', marginX, y);
+            y += 7;
+
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(80, 80, 80);
+
+            const planLabel = plan === 'principiante' ? 'Principiante' : plan === 'intermedio' ? 'Intermedio' : 'Avanzado';
+            const exerciseLabel = exerciseType === 'mat' ? 'Pilates Mat' : exerciseType === 'reformer' ? 'Pilates Reformer' : 'Mixto';
+            const goalsLabel = OBJETIVOS_INFO[goals]?.titulo || goals;
+
+            doc.text(`Plan: ${planLabel}`, marginX + 2, y);
+            y += 5;
+            doc.text(`Frecuencia: ${days} días por semana`, marginX + 2, y);
+            y += 5;
+            doc.text(`Duración de sesión: ${duration} minutos`, marginX + 2, y);
+            y += 5;
+            doc.text(`Tipo de ejercicios: ${exerciseLabel}`, marginX + 2, y);
+            y += 5;
+            doc.text(`Objetivo: ${goalsLabel}`, marginX + 2, y);
+            y += 10;
+
+            // HORARIOS RECOMENDADOS
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(12);
+            doc.setTextColor(31, 41, 55);
+            doc.text('Horarios Recomendados', marginX, y);
+            y += 7;
+
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(80, 80, 80);
+            const horarios = HORARIOS_RECOMENDADOS[days] || [];
+            horarios.forEach((h, idx) => {
+                doc.text(`Opción ${idx + 1}: ${h}`, marginX + 2, y);
+                y += 5;
+            });
+            y += 5;
+
+            // EJERCICIOS DEL PLAN
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(12);
+            doc.setTextColor(31, 41, 55);
+            doc.text('Ejercicios del Plan', marginX, y);
+            y += 7;
+
+            const ejercicios = EJERCICIOS_DB[plan]?.[exerciseType] || [];
+
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(9);
+
+            ejercicios.forEach((ej, idx) => {
+                // Número y nombre
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(90, 111, 94);
+                doc.text(`${idx + 1}. ${ej.nombre}`, marginX + 2, y);
+                y += 5;
+
+                // Descripción
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(100, 100, 100);
+                const descLines = doc.splitTextToSize(`${ej.descripcion}`, 160);
+                doc.text(descLines, marginX + 4, y);
+                y += descLines.length * 4;
+
+                // Series, reps, duración
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(8);
+                doc.setTextColor(130, 130, 130);
+                doc.text(`${ej.series} series × ${ej.repeticiones} reps | ${ej.duracion}`, marginX + 4, y);
+                y += 5;
+
+                if (y > 250) {
+                    doc.addPage();
+                    y = 20;
+                }
+            });
+
+            y += 5;
+
+            // OBJETIVOS Y RESULTADOS
+            const objetivoInfo = OBJETIVOS_INFO[goals];
+            if (objetivoInfo) {
+                doc.setFont(undefined, 'bold');
+                doc.setFontSize(12);
+                doc.setTextColor(31, 41, 55);
+                doc.text('Resultados Esperados', marginX, y);
+                y += 7;
+
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(10);
+                doc.setTextColor(80, 80, 80);
+                objetivoInfo.resultados.forEach((r) => {
+                    doc.text(`✓ ${r}`, marginX + 4, y);
+                    y += 5;
+                });
+            }
+
+            y += 5;
+
+            // NOTAS DEL CLIENTE
+            if (notes) {
+                doc.setFont(undefined, 'bold');
+                doc.setFontSize(11);
+                doc.setTextColor(31, 41, 55);
+                doc.text('Notas Especiales', marginX, y);
+                y += 6;
+
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(10);
+                doc.setTextColor(80, 80, 80);
+                const notesLines = doc.splitTextToSize(notes, 160);
+                doc.text(notesLines, marginX + 2, y);
+            }
+
+            // FOOTER
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(8);
+            doc.setTextColor(130, 130, 130);
+            doc.text('ARA TRAINER | Pilates Online + Nutrición', marginX, doc.internal.pageSize.getHeight() - 10);
+
+            // Guardar PDF
+            const filename = `ara-trainer-plan-${plan}-${Date.now()}.pdf`;
+            doc.save(filename);
+
+            showSuccess('✅ PDF generado y descargado exitosamente');
 
             // Actualizar estado en Firebase
             updateConsultation(currentConsultationId, {
@@ -324,7 +483,8 @@
                 duration: duration,
                 exerciseType: exerciseType,
                 goals: goals,
-                notes: notes
+                notes: notes,
+                pdfGenerated: true
             });
         };
 
