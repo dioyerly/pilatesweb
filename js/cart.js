@@ -143,28 +143,63 @@ function sendWhatsapp() {
         return;
     }
 
-    // Generar PDF automáticamente
-    downloadPdf();
+    // Descripciones detalladas para cada item
+    const itemDescriptions = {
+        'plan-principiante': 'Acceso a clases en vivo personalizadas, guia nutricional basica, soporte por email',
+        'plan-intermedio': 'Clases en vivo 3x/semana, plan nutricional personalizado, consultas 1:1, seguimiento mensual',
+        'plan-avanzado': 'Entrenamiento personalizado, clases ilimitadas, nutricionista dedicada, seguimiento semanal',
+        'servicio-pilates': 'Sesiones en vivo adaptadas a tu nivel, mejora postural y flexibilidad',
+        'servicio-nutricion': 'Planes de alimentacion personalizados, asesoramiento integral',
+        'plan-combinado': 'Pilates + Nutricion integral, seguimiento completo',
+        'clase-prueba': 'Clase introductoria para conocer la metodologia'
+    };
 
-    // Esperar un poco para que el PDF se descargue, luego abrir WhatsApp
-    setTimeout(() => {
-        let message = `${t('cart.whatsapp_greeting')}\n\n`;
-        message += buildSummaryLines().join('\n');
+    const itItemDescriptions = {
+        'plan-principiante': 'Accesso a lezioni dal vivo personalizzate, guida nutrizionale di base, supporto email',
+        'plan-intermedio': 'Lezioni dal vivo 3x/settimana, piano nutrizionale personalizzato, consulenze 1:1, monitoraggio mensile',
+        'plan-avanzado': 'Allenamento personalizzato, lezioni illimitate, nutrizionista dedicata, monitoraggio settimanale',
+        'servicio-pilates': 'Sessioni dal vivo adattate al tuo livello, miglioramento posturale e flessibilita',
+        'servicio-nutricion': 'Piani alimentari personalizzati, consulenza completa',
+        'plan-combinado': 'Pilates + Nutrizione integrale, monitoraggio completo',
+        'clase-prueba': 'Lezione introduttiva per conoscere la metodologia'
+    };
 
-        if (cartPresencial.checked) {
-            message += `\n\n${t('cart.whatsapp_presencial_line')}`;
-        }
+    const lang = getLang();
+    const descriptions = lang === 'it' ? itItemDescriptions : itemDescriptions;
 
-        const note = cartNote.value.trim();
-        if (note) {
-            message += `\n\n${t('cart.whatsapp_comment_label')} ${note}`;
-        }
+    // Construir mensaje detallado
+    let message = `${t('cart.whatsapp_greeting')}\n\n`;
+    message += `📋 *MI INTERESA:*\n`;
 
-        message += `\n\n${t('cart.whatsapp_closing')}`;
+    // Items con descripciones
+    cartItems.forEach((id, idx) => {
+        const item = CATALOG[id];
+        if (!item) return;
 
-        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-        window.open(url, '_blank');
-    }, 500);
+        const itemName = t(item.nameKey);
+        const itemType = t(item.typeKey);
+        const desc = descriptions[id] || '';
+
+        message += `\n${idx + 1}. *${itemName}*\n`;
+        message += `   Tipo: ${itemType}\n`;
+        message += `   ${desc}\n`;
+    });
+
+    // Modalidad presencial
+    if (cartPresencial.checked) {
+        message += `\n📍 ${t('cart.whatsapp_presencial_line')}`;
+    }
+
+    // Comentarios del cliente
+    const note = cartNote.value.trim();
+    if (note) {
+        message += `\n\n💬 *COMENTARIOS:*\n${note}`;
+    }
+
+    message += `\n\n${t('cart.whatsapp_closing')}`;
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
 }
 
 function downloadPdf() {
