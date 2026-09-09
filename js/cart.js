@@ -273,6 +273,9 @@ async function sendWhatsappWithPlanData(planPrincipal, planDias, planDuracion, p
             clientMessage: publicMessage
         });
 
+        // Generar PDF profesional del plan
+        generatePersonalizedPlanPDF(planPrincipal, planDias, planDuracion, planEjercicios, planObjetivo, planPeso, planAltura, planNotas);
+
         // Abrir WhatsApp con mensaje público (sin datos sensibles)
         const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(publicMessage)}`;
 
@@ -301,7 +304,7 @@ async function sendWhatsappWithPlanData(planPrincipal, planDias, planDuracion, p
             document.getElementById('cart-form-content').style.display = 'none';
             renderAll();
             closeDrawer();
-            alert('✅ Consulta enviada. El panel de respuesta se abrirá en una nueva pestaña.');
+            alert('✅ Consulta enviada y PDF descargado. Ahora abre WhatsApp para confirmar tu consulta.');
         }, 500);
 
     } catch (error) {
@@ -311,6 +314,152 @@ async function sendWhatsappWithPlanData(planPrincipal, planDias, planDuracion, p
         btn.textContent = originalText;
         btn.disabled = false;
     }
+}
+
+function generatePersonalizedPlanPDF(planPrincipal, planDias, planDuracion, planEjercicios, planObjetivo, planPeso, planAltura, planNotas) {
+    if (!window.jspdf) {
+        console.error('jsPDF not available');
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const marginX = 20;
+    const marginR = pageWidth - 20;
+    let y = 12;
+
+    // LOGO - Círculos dorados
+    const circleSize = 8;
+    const circleGap = 3;
+    const circleY = y + 2;
+    const startX = marginX;
+
+    doc.setFillColor(212, 200, 142);
+    for (let i = 0; i < 5; i++) {
+        doc.circle(startX + (i * (circleSize + circleGap)), circleY, circleSize / 2, 'F');
+    }
+    y += circleSize + 8;
+
+    // HEADER
+    doc.setFont(undefined, 'bold');
+    doc.setFontSize(28);
+    doc.setTextColor(212, 200, 142);
+    doc.text('ARA TRAINER', marginX, y);
+    y += 10;
+
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(12);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Tu Plan Personalizado de Transformación', marginX, y);
+    y += 5;
+    doc.setFontSize(10);
+    doc.text('Pilates Online + Nutrición', marginX, y);
+    y += 12;
+
+    // LÍNEA DIVISORIA
+    doc.setDrawColor(212, 200, 142);
+    doc.setLineWidth(1);
+    doc.line(marginX, y, marginR, y);
+    y += 8;
+
+    // FECHA
+    const now = new Date();
+    const lang = getLang();
+    const dateFormatter = new Intl.DateTimeFormat(lang === 'it' ? 'it-IT' : 'es-AR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    const dateStr = dateFormatter.format(now);
+
+    doc.setFontSize(9);
+    doc.setTextColor(120, 120, 120);
+    doc.text(dateStr, marginX, y);
+    y += 10;
+
+    // SECCIÓN: TU PLAN
+    doc.setFont(undefined, 'bold');
+    doc.setFontSize(14);
+    doc.setTextColor(40, 40, 40);
+    doc.text('Tu Plan de Entrenamiento', marginX, y);
+    y += 8;
+
+    // NOMBRE DEL PLAN
+    doc.setFont(undefined, 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(212, 200, 142);
+    const planName = planPrincipal.charAt(0).toUpperCase() + planPrincipal.slice(1);
+    doc.text('Plan ' + planName, marginX, y);
+    y += 8;
+
+    // DETALLES DEL PLAN
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(60, 60, 60);
+    doc.text('Frecuencia: ' + planDias + ' días/semana', marginX + 3, y);
+    y += 5;
+    doc.text('Duración por sesión: ' + planDuracion + ' minutos', marginX + 3, y);
+    y += 5;
+    doc.text('Tipo de ejercicios: ' + planEjercicios, marginX + 3, y);
+    y += 5;
+    doc.text('Objetivo principal: ' + planObjetivo, marginX + 3, y);
+    y += 8;
+
+    // SECCIÓN: TUS DATOS
+    doc.setFont(undefined, 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(40, 40, 40);
+    doc.text('Tus Datos', marginX, y);
+    y += 7;
+
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(60, 60, 60);
+    doc.text('Peso: ' + planPeso + ' kg', marginX + 3, y);
+    y += 5;
+    doc.text('Altura: ' + planAltura + ' cm', marginX + 3, y);
+    y += 8;
+
+    // NOTAS SI EXISTEN
+    if (planNotas) {
+        doc.setFont(undefined, 'bold');
+        doc.setFontSize(12);
+        doc.setTextColor(40, 40, 40);
+        doc.text('Notas Adicionales', marginX, y);
+        y += 7;
+
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(80, 80, 80);
+        const notasLines = doc.splitTextToSize(planNotas, 165);
+        doc.text(notasLines, marginX + 3, y);
+        y += notasLines.length * 5 + 5;
+    }
+
+    y += 5;
+
+    // LÍNEA FINAL
+    doc.setDrawColor(212, 200, 142);
+    doc.setLineWidth(1);
+    doc.line(marginX, y, marginR, y);
+    y += 8;
+
+    // FOOTER
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(120, 120, 120);
+    doc.text('ARA TRAINER | Pilates Online + Nutrición', marginX, y);
+    y += 5;
+    doc.text('WhatsApp: +39 389 1131525', marginX, y);
+    y += 4;
+    doc.text('Email: aranircamarl@gmail.com', marginX, y);
+
+    const filename = lang === 'it' ? 'ara-trainer-piano-personalizzato.pdf' : 'ara-trainer-plan-personalizado.pdf';
+    doc.save(filename);
 }
 
 function downloadPdf() {
