@@ -846,7 +846,7 @@ footer p {
     top: 0;
     right: 0;
     width: 380px;
-    max-width: 90vw;
+    max-width: 100%;
     height: 100%;
     background: white;
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
@@ -855,6 +855,7 @@ footer p {
     z-index: 80;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
 }
 
 .cart-drawer.active {
@@ -1304,8 +1305,11 @@ a.logo {
     }
 
     .cart-fab {
-        bottom: 16px;
-        right: 16px;
+        bottom: 20px;
+        right: 20px;
+        font-size: 22px;
+        width: 56px;
+        height: 56px;
     }
 
     .detalle-hero h1 {
@@ -1369,6 +1373,65 @@ a.logo {
 
     .cta-hero .btn {
         width: 100%;
+    }
+
+    /* CARRITO EN MÓVIL */
+    .cart-drawer {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .cart-header {
+        padding: 16px;
+    }
+
+    .cart-items {
+        padding: 8px 16px;
+    }
+
+    .cart-footer {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .cart-footer textarea {
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    .cart-item {
+        padding: 10px 0;
+    }
+
+    .cart-item-icon {
+        font-size: 20px;
+    }
+
+    .checkbox-label {
+        font-size: 12px;
+    }
+
+    .cart-footer label {
+        font-size: 12px;
+    }
+
+    .btn {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+
+    .cart-form-section {
+        padding: 12px 16px;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 10px 12px;
+        font-size: 16px;
     }
 }
 
