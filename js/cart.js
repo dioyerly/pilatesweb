@@ -94,11 +94,13 @@ function renderCartList() {
     if (cartItems.length === 0) {
         cartEmptyEl.style.display = 'block';
         cartItemsEl.style.display = 'none';
+        document.getElementById('cart-form-section').style.display = 'none';
         return;
     }
 
     cartEmptyEl.style.display = 'none';
     cartItemsEl.style.display = 'block';
+    document.getElementById('cart-form-section').style.display = 'block';
 
     cartItems.forEach(id => {
         const item = CATALOG[id];
@@ -152,20 +154,19 @@ function buildSummaryLines() {
         .map(item => `• ${item.icon} ${t(item.nameKey)} (${t(item.typeKey)})`);
 }
 
-function openPlanModal() {
-    if (cartItems.length === 0) {
-        alert(t('cart.alert_empty_whatsapp'));
-        return;
+// Toggle formulario dentro del carrito
+function toggleFormSection() {
+    const formContent = document.getElementById('cart-form-content');
+    if (formContent.style.display === 'none') {
+        formContent.style.display = 'block';
+    } else {
+        formContent.style.display = 'none';
     }
-    document.getElementById('plan-modal').style.display = 'flex';
 }
 
-window.closePlanModal = () => {
-    document.getElementById('plan-modal').style.display = 'none';
-};
+window.toggleFormSection = toggleFormSection;
 
 window.submitPlanForm = async () => {
-    const planPrincipal = document.getElementById('plan-principal').value;
     const planDias = document.getElementById('plan-dias').value;
     const planDuracion = document.getElementById('plan-duracion').value;
     const planEjercicios = document.getElementById('plan-ejercicios').value;
@@ -175,10 +176,13 @@ window.submitPlanForm = async () => {
     const planNotas = document.getElementById('plan-notas').value;
 
     // Validar que todos los campos requeridos estén completos
-    if (!planPrincipal || !planDias || !planDuracion || !planEjercicios || !planObjetivo || !planPeso || !planAltura) {
+    if (!planDias || !planDuracion || !planEjercicios || !planObjetivo || !planPeso || !planAltura) {
         alert('Por favor completa todos los campos requeridos (*)');
         return;
     }
+
+    // Usar el primer plan del carrito (o combinarlos si hay múltiples)
+    const planPrincipal = cartItems[0] ? cartItems[0].replace('plan-', '') : 'combinado';
 
     await sendWhatsappWithPlanData(planPrincipal, planDias, planDuracion, planEjercicios, planObjetivo, planPeso, planAltura, planNotas);
 };
@@ -217,23 +221,14 @@ async function sendWhatsappWithPlanData(planPrincipal, planDias, planDuracion, p
         const lang = getLang();
         const descriptions = lang === 'it' ? itItemDescriptions : itemDescriptions;
 
-        // Construir mensaje detallado
+        // Construir mensaje resumido (solo ID y plan básico)
         let message = `${t('cart.whatsapp_greeting')}\n\n`;
-        message += `📋 *MI INTERESA:*\n`;
 
-        // Items con descripciones
-        cartItems.forEach((id, idx) => {
-            const item = CATALOG[id];
-            if (!item) return;
-
-            const itemName = t(item.nameKey);
-            const itemType = t(item.typeKey);
-            const desc = descriptions[id] || '';
-
-            message += `\n${idx + 1}. *${itemName}*\n`;
-            message += `   Tipo: ${itemType}\n`;
-            message += `   ${desc}\n`;
-        });
+        // Resumen simple del plan
+        const planName = planPrincipal.charAt(0).toUpperCase() + planPrincipal.slice(1);
+        message += `📋 *Mi Interés:*\n`;
+        message += `Plan ${planName}\n`;
+        message += `${planDias} días/semana - ${planDuracion} min sesión\n`;
 
         // Modalidad presencial
         if (cartPresencial.checked) {
@@ -284,6 +279,16 @@ async function sendWhatsappWithPlanData(planPrincipal, planDias, planDuracion, p
             saveCart([]);
             cartNote.value = '';
             cartPresencial.checked = false;
+            // Limpiar formulario
+            document.getElementById('plan-dias').value = '';
+            document.getElementById('plan-duracion').value = '';
+            document.getElementById('plan-ejercicios').value = '';
+            document.getElementById('plan-objetivo').value = '';
+            document.getElementById('plan-peso').value = '';
+            document.getElementById('plan-altura').value = '';
+            document.getElementById('plan-notas').value = '';
+            // Cerrar formulario
+            document.getElementById('cart-form-content').style.display = 'none';
             renderAll();
             closeDrawer();
             alert('✅ Consulta enviada. El panel de respuesta se abrirá en una nueva pestaña.');
@@ -493,7 +498,7 @@ document.querySelectorAll('.btn-add-cart').forEach(btn => {
 cartFab.addEventListener('click', openDrawer);
 cartCloseBtn.addEventListener('click', closeDrawer);
 cartOverlay.addEventListener('click', closeDrawer);
-cartWhatsappBtn.addEventListener('click', openPlanModal);
+cartWhatsappBtn.addEventListener('click', submitPlanForm);
 
 const openCartFinalBtn = document.getElementById('open-cart-final');
 if (openCartFinalBtn) {
@@ -507,5 +512,5 @@ window.toggleItem = toggleItem;
 window.removeItem = removeItem;
 window.openDrawer = openDrawer;
 window.closeDrawer = closeDrawer;
-window.openPlanModal = openPlanModal;
-// closePlanModal y submitPlanForm ya están globales
+window.toggleFormSection = toggleFormSection;
+window.submitPlanForm = window.submitPlanForm;

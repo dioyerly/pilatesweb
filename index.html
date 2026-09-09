@@ -311,50 +311,27 @@
             <p class="cart-empty-sub" data-i18n="cart.empty_line2">Elegí un plan o servicio que te interese ✨</p>
         </div>
 
-        <div class="cart-footer">
-            <label class="checkbox-label" for="cart-presencial">
-                <input type="checkbox" id="cart-presencial">
-                <span data-i18n="cart.presencial_label">📍 Prefiero modalidad presencial (si estoy en Italia)</span>
-            </label>
-            <label for="cart-note" data-i18n="cart.note_label">Comentario adicional (opcional)</label>
-            <textarea id="cart-note" rows="3" data-i18n-placeholder="cart.note_placeholder" placeholder="Ej: prefiero horario de tarde..."></textarea>
-            <button id="cart-whatsapp" class="btn btn-primary cart-btn" data-i18n="cart.btn_whatsapp">📱 Enviar consulta</button>
-        </div>
-    </aside>
+        <!-- Formulario Personalización DENTRO del carrito -->
+        <div id="cart-form-section" class="cart-form-section" style="display: none;">
+            <button id="cart-form-toggle" class="cart-form-toggle" onclick="toggleFormSection()">
+                📋 Generar Plan Personalizado
+            </button>
 
-    <!-- Modal: Personalización de Plan -->
-    <div id="plan-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>📋 Generar Plan Personalizado</h2>
-                <button onclick="closePlanModal()" class="modal-close">✕</button>
-            </div>
-
-            <div class="modal-body">
-                <p style="color: #666; margin-bottom: 20px;">Completa esta información para que Ara cree tu plan personalizado</p>
+            <div id="cart-form-content" class="cart-form-content" style="display: none;">
+                <p style="color: #666; margin-bottom: 15px; font-size: 14px;">Completa esta información para que Ara cree tu plan personalizado</p>
 
                 <div class="form-group">
-                    <label>Plan Principal *</label>
-                    <select id="plan-principal" required>
-                        <option value="">-- Selecciona un plan --</option>
-                        <option value="principiante">Plan Principiante - Iniciación en Pilates</option>
-                        <option value="intermedio">Plan Intermedio - Progresión Completa</option>
-                        <option value="avanzado">Plan Avanzado - Especialización</option>
+                    <label>Días por Semana *</label>
+                    <select id="plan-dias" required>
+                        <option value="">-- Selecciona --</option>
+                        <option value="2">2 días por semana</option>
+                        <option value="3">3 días por semana</option>
+                        <option value="4">4 días por semana</option>
+                        <option value="5">5 días por semana</option>
                     </select>
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>Días por Semana *</label>
-                        <select id="plan-dias" required>
-                            <option value="">-- Selecciona --</option>
-                            <option value="2">2 días por semana</option>
-                            <option value="3">3 días por semana</option>
-                            <option value="4">4 días por semana</option>
-                            <option value="5">5 días por semana</option>
-                        </select>
-                    </div>
-
                     <div class="form-group">
                         <label>Duración de Sesión *</label>
                         <select id="plan-duracion" required>
@@ -364,25 +341,25 @@
                             <option value="60">60 minutos</option>
                         </select>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label>Tipo de Ejercicios *</label>
-                    <select id="plan-ejercicios" required>
-                        <option value="">-- Selecciona --</option>
-                        <option value="mat">Pilates Mat (sin equipos)</option>
-                        <option value="reformer">Pilates Reformer</option>
-                        <option value="mixto">Mixto (Mat + Reformer)</option>
-                    </select>
+                    <div class="form-group">
+                        <label>Tipo de Ejercicios *</label>
+                        <select id="plan-ejercicios" required>
+                            <option value="">-- Selecciona --</option>
+                            <option value="mat">Pilates Mat</option>
+                            <option value="reformer">Pilates Reformer</option>
+                            <option value="mixto">Mixto</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label>Objetivo Principal *</label>
                     <select id="plan-objetivo" required>
                         <option value="">-- Selecciona --</option>
-                        <option value="weight-loss">Pérdida de peso y tonificación</option>
-                        <option value="strength">Aumento de fuerza y resistencia</option>
-                        <option value="flexibility">Flexibilidad y movilidad</option>
+                        <option value="weight-loss">Pérdida de peso</option>
+                        <option value="strength">Aumento de fuerza</option>
+                        <option value="flexibility">Flexibilidad</option>
                         <option value="posture">Corrección postural</option>
                         <option value="general">Bienestar general</option>
                     </select>
@@ -402,50 +379,79 @@
 
                 <div class="form-group">
                     <label>Notas Adicionales (Opcional)</label>
-                    <textarea id="plan-notas" rows="3" placeholder="Ej: lesiones previas, limitaciones, preferencias..."></textarea>
+                    <textarea id="plan-notas" rows="2" placeholder="Ej: lesiones previas, limitaciones..."></textarea>
                 </div>
             </div>
-
-            <div class="modal-footer">
-                <button onclick="closePlanModal()" class="btn btn-secondary">Cancelar</button>
-                <button onclick="submitPlanForm()" class="btn btn-primary">Enviar Consulta</button>
-            </div>
         </div>
-    </div>
+
+        <div class="cart-footer">
+            <label class="checkbox-label" for="cart-presencial">
+                <input type="checkbox" id="cart-presencial">
+                <span data-i18n="cart.presencial_label">📍 Prefiero modalidad presencial (si estoy en Italia)</span>
+            </label>
+            <label for="cart-note" data-i18n="cart.note_label">Comentario adicional (opcional)</label>
+            <textarea id="cart-note" rows="3" data-i18n-placeholder="cart.note_placeholder" placeholder="Ej: prefiero horario de tarde..."></textarea>
+            <button id="cart-whatsapp" class="btn btn-primary cart-btn" data-i18n="cart.btn_whatsapp">📱 Enviar consulta</button>
+        </div>
+    </aside>
 
     <style>
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
+        .cart-form-section {
+            padding: 15px;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 15px;
         }
 
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        .cart-form-toggle {
+            width: 100%;
+            padding: 12px;
+            background: #f9f6f0;
+            border: 1px solid #d4c88e;
+            border-radius: 8px;
+            color: var(--primary-dark);
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            text-align: left;
         }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #e5e7eb;
+        .cart-form-toggle:hover {
+            background: #f0ede5;
         }
 
-        .modal-header h2 {
-            margin: 0;
-            font-size: 20px;
-            color: var(--primary);
+        .cart-form-content {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .cart-form-content .form-group {
+            margin-bottom: 12px;
+        }
+
+        .cart-form-content label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .cart-form-content select,
+        .cart-form-content input,
+        .cart-form-content textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #d4c88e;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .cart-form-content .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
 
         .modal-close {
