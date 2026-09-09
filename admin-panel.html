@@ -742,17 +742,6 @@
             }
             y += 5;
 
-            // HORARIOS RECOMENDADOS
-            addSection('Horarios Recomendados');
-            doc.text('Elige la opción que mejor se ajuste a tu rutina:', marginX + 2, y);
-            y += 5;
-            const horarios = HORARIOS_RECOMENDADOS[days] || [];
-            horarios.forEach((h, idx) => {
-                doc.text(`• Opción ${idx + 1}: ${h}`, marginX + 4, y);
-                y += 5;
-            });
-            y += 5;
-
             // HORARIOS DISPONIBLES DEL DUEÑO
             const selectedDays = [];
             ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'].forEach(day => {
