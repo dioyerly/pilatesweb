@@ -135,7 +135,7 @@ nav .container {
 }
 
 .hero-logo {
-    height: 180px;
+    height: 280px;
     display: block;
     margin: 0 auto 40px;
 }
@@ -1341,7 +1341,7 @@ a.logo {
     }
 
     .hero-logo {
-        height: 120px;
+        height: 180px;
         margin: 0 auto 30px;
     }
 
@@ -1355,7 +1355,7 @@ a.logo {
     }
 
     .hero-logo {
-        height: 100px;
+        height: 150px;
     }
 
     .hero-tagline {
