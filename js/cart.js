@@ -152,13 +152,38 @@ function buildSummaryLines() {
         .map(item => `• ${item.icon} ${t(item.nameKey)} (${t(item.typeKey)})`);
 }
 
-async function sendWhatsapp() {
+function openPlanModal() {
     if (cartItems.length === 0) {
         alert(t('cart.alert_empty_whatsapp'));
         return;
     }
+    document.getElementById('plan-modal').style.display = 'flex';
+}
 
-    // Mostrar loading
+window.closePlanModal = () => {
+    document.getElementById('plan-modal').style.display = 'none';
+};
+
+window.submitPlanForm = async () => {
+    const planPrincipal = document.getElementById('plan-principal').value;
+    const planDias = document.getElementById('plan-dias').value;
+    const planDuracion = document.getElementById('plan-duracion').value;
+    const planEjercicios = document.getElementById('plan-ejercicios').value;
+    const planObjetivo = document.getElementById('plan-objetivo').value;
+    const planPeso = document.getElementById('plan-peso').value;
+    const planAltura = document.getElementById('plan-altura').value;
+    const planNotas = document.getElementById('plan-notas').value;
+
+    // Validar que todos los campos requeridos estén completos
+    if (!planPrincipal || !planDias || !planDuracion || !planEjercicios || !planObjetivo || !planPeso || !planAltura) {
+        alert('Por favor completa todos los campos requeridos (*)');
+        return;
+    }
+
+    await sendWhatsappWithPlanData(planPrincipal, planDias, planDuracion, planEjercicios, planObjetivo, planPeso, planAltura, planNotas);
+};
+
+async function sendWhatsappWithPlanData(planPrincipal, planDias, planDuracion, planEjercicios, planObjetivo, planPeso, planAltura, planNotas) {
     const btn = cartWhatsappBtn;
     const originalText = btn.textContent;
     btn.textContent = 'Generando consulta...';
@@ -230,14 +255,23 @@ async function sendWhatsapp() {
 
         message += `\n\n${t('cart.whatsapp_closing')}`;
 
-        // Guardar consulta en Firebase
+        // Guardar consulta en Firebase CON datos del plan
         await saveConsultation({
             consultationId: consultationId,
             items: cartItems,
             presencial: cartPresencial.checked,
             note: note,
             language: lang,
-            panelLink: panelLink
+            panelLink: panelLink,
+            // Datos del plan personalizado
+            plan: planPrincipal,
+            dias: planDias,
+            duracion: planDuracion,
+            ejercicios: planEjercicios,
+            objetivo: planObjetivo,
+            peso: planPeso,
+            altura: planAltura,
+            notasPersonalizacion: planNotas
         });
 
         // Abrir WhatsApp
@@ -459,7 +493,7 @@ document.querySelectorAll('.btn-add-cart').forEach(btn => {
 cartFab.addEventListener('click', openDrawer);
 cartCloseBtn.addEventListener('click', closeDrawer);
 cartOverlay.addEventListener('click', closeDrawer);
-cartWhatsappBtn.addEventListener('click', sendWhatsapp);
+cartWhatsappBtn.addEventListener('click', openPlanModal);
 
 const openCartFinalBtn = document.getElementById('open-cart-final');
 if (openCartFinalBtn) {
@@ -473,4 +507,5 @@ window.toggleItem = toggleItem;
 window.removeItem = removeItem;
 window.openDrawer = openDrawer;
 window.closeDrawer = closeDrawer;
-window.sendWhatsapp = sendWhatsapp;
+window.openPlanModal = openPlanModal;
+// closePlanModal y submitPlanForm ya están globales
