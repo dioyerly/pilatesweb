@@ -216,10 +216,18 @@
 
             <button onclick="checkPassword()" class="btn btn-primary">Acceder</button>
         </div>
+
+        <!-- Panel de Histórico de Consultas -->
+        <div class="admin-card" id="history-card" style="display: none;">
+            <h2>📋 Consultas Recibidas</h2>
+            <p>Selecciona una consulta para generar el plan personalizado.</p>
+
+            <div id="consultations-list"></div>
+        </div>
     </div>
 
     <script type="module">
-        import { getConsultation, updateConsultation } from './js/firebase-config.js';
+        import { getConsultation, updateConsultation, getAllConsultations } from './js/firebase-config.js';
 
         // Contraseña simple (considera cambiarla)
         const ADMIN_PASSWORD = 'ara2024';
@@ -234,24 +242,94 @@
         }
 
         // Verificar contraseña
-        window.checkPassword = () => {
+        window.checkPassword = async () => {
             const password = document.getElementById('password-input').value;
 
             if (password === ADMIN_PASSWORD) {
                 localStorage.setItem('admin-session', 'true');
-                loadConsultation();
+                await loadAllConsultations();
             } else {
                 showError('Contraseña incorrecta');
                 document.getElementById('password-input').value = '';
             }
         };
 
-        // Cargar consulta
+        // Cargar todas las consultas
+        async function loadAllConsultations() {
+            try {
+                const consultations = await getAllConsultations();
+
+                document.getElementById('login-card').style.display = 'none';
+                document.getElementById('history-card').style.display = 'block';
+
+                const listEl = document.getElementById('consultations-list');
+                listEl.innerHTML = '';
+
+                if (consultations.length === 0) {
+                    listEl.innerHTML = '<p style="color: #999; text-align: center;">No hay consultas aún</p>';
+                    return;
+                }
+
+                consultations.forEach((consultation) => {
+                    const card = document.createElement('div');
+                    card.className = 'consultation-card';
+                    card.style.cssText = `
+                        background: #f9f9f9;
+                        padding: 15px;
+                        border-radius: 8px;
+                        border-left: 4px solid var(--primary);
+                        margin-bottom: 10px;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    `;
+
+                    const itemsList = consultation.items.join(', ');
+                    const status = consultation.status === 'completed' ? '✅ Completada' : '⏳ Pendiente';
+                    const date = consultation.createdAt?.toDate?.()?.toLocaleDateString('es-AR') || 'Fecha no disponible';
+
+                    card.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                <strong style="color: var(--primary);">${consultation.consultationId}</strong>
+                                <p style="margin: 5px 0; font-size: 12px; color: #999;">${date}</p>
+                                <p style="margin: 5px 0; font-size: 13px;">${itemsList}</p>
+                            </div>
+                            <span style="background: ${consultation.status === 'completed' ? '#efe' : '#fef'};
+                                        color: ${consultation.status === 'completed' ? '#3c3' : '#999'};
+                                        padding: 5px 10px; border-radius: 4px; font-size: 11px;">
+                                ${status}
+                            </span>
+                        </div>
+                    `;
+
+                    card.addEventListener('click', () => selectConsultation(consultation));
+                    listEl.appendChild(card);
+                });
+
+            } catch (error) {
+                showError('Error al cargar consultas: ' + error.message);
+            }
+        }
+
+        // Seleccionar una consulta
+        function selectConsultation(consultation) {
+            currentConsultationId = consultation.consultationId;
+            currentConsultation = consultation;
+
+            document.getElementById('history-card').style.display = 'none';
+            document.getElementById('form-card').style.display = 'block';
+            document.getElementById('consultation-card').style.display = 'block';
+
+            displayConsultation();
+        }
+
+        // Cargar consulta específica por ID en URL
         async function loadConsultation() {
             currentConsultationId = getConsultationIdFromURL();
 
             if (!currentConsultationId) {
-                showError('ID de consulta no encontrado en la URL');
+                // Si no hay ID, cargar histórico
+                await loadAllConsultations();
                 return;
             }
 
