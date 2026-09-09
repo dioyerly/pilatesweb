@@ -455,3 +455,10 @@ if (openCartFinalBtn) {
 }
 
 renderAll();
+
+// Hacer funciones globales disponibles para el HTML
+window.toggleItem = toggleItem;
+window.removeItem = removeItem;
+window.openDrawer = openDrawer;
+window.closeDrawer = closeDrawer;
+window.sendWhatsapp = sendWhatsapp;
