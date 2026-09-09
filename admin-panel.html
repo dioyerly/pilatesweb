@@ -194,9 +194,72 @@
                 </select>
             </div>
 
+            <!-- Datos del Cliente (Pre-llenados) -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="weight-input">Peso (kg)</label>
+                    <input type="number" id="weight-input" placeholder="Ej: 70" min="30" max="200" readonly style="background: #f5f5f5;">
+                </div>
+
+                <div class="form-group">
+                    <label for="height-input">Altura (cm)</label>
+                    <input type="number" id="height-input" placeholder="Ej: 170" min="120" max="230" readonly style="background: #f5f5f5;">
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="notes-input">Notas Adicionales (Opcional)</label>
                 <textarea id="notes-input" rows="3" placeholder="Ej: lesiones previas, limitaciones, preferencias..."></textarea>
+            </div>
+
+            <!-- Sección de Cotización -->
+            <div style="background: #f9f6f0; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #d4c88e;">
+                <h3 style="margin-top: 0; color: var(--primary);">💰 Cotización</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="hourly-rate">Tarifa por Hora ($) *</label>
+                        <input type="number" id="hourly-rate" placeholder="Ej: 50" min="1" step="5" value="50">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="discount-percent">Descuento (%)</label>
+                        <input type="number" id="discount-percent" placeholder="0" min="0" max="100" step="5" value="0">
+                    </div>
+                </div>
+
+                <button onclick="calculateQuote()" class="btn btn-secondary" style="width: 100%; margin-bottom: 15px;">🧮 Calcular Cotización</button>
+
+                <div id="quote-display" style="display: none;">
+                    <div style="border-top: 1px solid #d4c88e; padding-top: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
+                            <span>Sesiones/mes:</span>
+                            <span id="sessions-per-month">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
+                            <span>Horas/mes:</span>
+                            <span id="hours-per-month">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px;">
+                            <span>Valor sin descuento:</span>
+                            <span id="subtotal">-</span>
+                        </div>
+                        <div id="discount-display" style="display: none; margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; color: #c33;">
+                                <span>Descuento (<span id="discount-percent-display">0</span>%):</span>
+                                <span id="discount-amount">-</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; border-top: 2px solid #d4c88e; padding-top: 10px; font-weight: bold; font-size: 16px;">
+                            <span>TOTAL:</span>
+                            <span id="total-amount" style="color: var(--primary);">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="apply10PercentDiscount()" class="btn btn-secondary" style="width: 100%; margin-top: 15px; background: #e8f5e9; color: #2e7d32; border-color: #81c784;">
+                    🎁 Aplicar 10% Descuento
+                </button>
             </div>
 
             <div class="btn-group">
@@ -354,7 +417,7 @@
             }
         }
 
-        // Mostrar detalles de la consulta
+        // Mostrar detalles de la consulta y pre-llenar formulario
         function displayConsultation() {
             document.getElementById('consultation-id-display').textContent = currentConsultationId;
 
@@ -373,10 +436,87 @@
                 document.getElementById('consultation-note').innerHTML =
                     `<div class="consultation-item"><strong>Comentario:</strong> "${currentConsultation.note}"</div>`;
             }
+
+            // PRE-LLENAR FORMULARIO con datos del cliente
+            if (currentConsultation.plan) {
+                document.getElementById('plan-select').value = currentConsultation.plan;
+            }
+            if (currentConsultation.dias) {
+                document.getElementById('days-select').value = currentConsultation.dias;
+            }
+            if (currentConsultation.duracion) {
+                document.getElementById('duration-select').value = currentConsultation.duracion;
+            }
+            if (currentConsultation.ejercicios) {
+                // Mapear formato guardado a opciones del select
+                const exerciseTypeMap = {
+                    'mat': 'mat',
+                    'reformer': 'reformer',
+                    'mixto': 'mixed',
+                    'mixed': 'mixed'
+                };
+                const exerciseValue = exerciseTypeMap[currentConsultation.ejercicios] || currentConsultation.ejercicios;
+                document.getElementById('exercise-type-select').value = exerciseValue;
+            }
+            if (currentConsultation.objetivo) {
+                document.getElementById('goals-select').value = currentConsultation.objetivo;
+            }
+            if (currentConsultation.peso) {
+                document.getElementById('weight-input').value = currentConsultation.peso;
+            }
+            if (currentConsultation.altura) {
+                document.getElementById('height-input').value = currentConsultation.altura;
+            }
+            if (currentConsultation.notasPersonalizacion) {
+                document.getElementById('notes-input').value = currentConsultation.notasPersonalizacion;
+            }
         }
 
         // Importar ejercicios
         const { EJERCICIOS_DB, OBJETIVOS_INFO, HORARIOS_RECOMENDADOS } = await import('./js/ejercicios.js');
+
+        // Calcular cotización
+        window.calculateQuote = () => {
+            const days = parseInt(document.getElementById('days-select').value);
+            const duration = parseInt(document.getElementById('duration-select').value);
+            const hourlyRate = parseFloat(document.getElementById('hourly-rate').value);
+            const discountPercent = parseFloat(document.getElementById('discount-percent').value);
+
+            if (!days || !duration || !hourlyRate) {
+                showError('Completa Días, Duración y Tarifa para calcular');
+                return;
+            }
+
+            // Cálculo: sesiones/mes (aproximado 4 semanas)
+            const sessionsPerMonth = days * 4;
+            const durationInHours = duration / 60;
+            const hoursPerMonth = sessionsPerMonth * durationInHours;
+            const subtotal = hoursPerMonth * hourlyRate;
+            const discountAmount = subtotal * (discountPercent / 100);
+            const total = subtotal - discountAmount;
+
+            // Mostrar cotización
+            document.getElementById('sessions-per-month').textContent = sessionsPerMonth;
+            document.getElementById('hours-per-month').textContent = hoursPerMonth.toFixed(1);
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('total-amount').textContent = `$${total.toFixed(2)}`;
+
+            if (discountPercent > 0) {
+                document.getElementById('discount-display').style.display = 'block';
+                document.getElementById('discount-percent-display').textContent = discountPercent;
+                document.getElementById('discount-amount').textContent = `-$${discountAmount.toFixed(2)}`;
+            } else {
+                document.getElementById('discount-display').style.display = 'none';
+            }
+
+            document.getElementById('quote-display').style.display = 'block';
+        };
+
+        // Aplicar descuento del 10%
+        window.apply10PercentDiscount = () => {
+            document.getElementById('discount-percent').value = 10;
+            calculateQuote();
+        };
 
         // Generar PDF
         window.generatePDF = async () => {
@@ -464,48 +604,49 @@
                 doc.text(`Opción ${idx + 1}: ${h}`, marginX + 2, y);
                 y += 5;
             });
-            y += 5;
+            y += 10;
 
-            // EJERCICIOS DEL PLAN
+            // COTIZACIÓN
+            const hourlyRate = parseFloat(document.getElementById('hourly-rate').value) || 50;
+            const discountPercent = parseFloat(document.getElementById('discount-percent').value) || 0;
+            const daysNum = parseInt(days);
+            const durationNum = parseInt(duration);
+            const sessionsPerMonth = daysNum * 4;
+            const durationInHours = durationNum / 60;
+            const hoursPerMonth = sessionsPerMonth * durationInHours;
+            const subtotal = hoursPerMonth * hourlyRate;
+            const discountAmount = subtotal * (discountPercent / 100);
+            const total = subtotal - discountAmount;
+
             doc.setFont(undefined, 'bold');
             doc.setFontSize(12);
             doc.setTextColor(31, 41, 55);
-            doc.text('Ejercicios del Plan', marginX, y);
+            doc.text('Cotización', marginX, y);
             y += 7;
 
-            const ejercicios = EJERCICIOS_DB[plan]?.[exerciseType] || [];
-
             doc.setFont(undefined, 'normal');
-            doc.setFontSize(9);
-
-            ejercicios.forEach((ej, idx) => {
-                // Número y nombre
-                doc.setFont(undefined, 'bold');
-                doc.setTextColor(90, 111, 94);
-                doc.text(`${idx + 1}. ${ej.nombre}`, marginX + 2, y);
-                y += 5;
-
-                // Descripción
-                doc.setFont(undefined, 'normal');
-                doc.setTextColor(100, 100, 100);
-                const descLines = doc.splitTextToSize(`${ej.descripcion}`, 160);
-                doc.text(descLines, marginX + 4, y);
-                y += descLines.length * 4;
-
-                // Series, reps, duración
-                doc.setFont(undefined, 'normal');
-                doc.setFontSize(8);
-                doc.setTextColor(130, 130, 130);
-                doc.text(`${ej.series} series × ${ej.repeticiones} reps | ${ej.duracion}`, marginX + 4, y);
-                y += 5;
-
-                if (y > 250) {
-                    doc.addPage();
-                    y = 20;
-                }
-            });
-
+            doc.setFontSize(10);
+            doc.setTextColor(80, 80, 80);
+            doc.text(`Tarifa por hora: $${hourlyRate.toFixed(2)}`, marginX + 2, y);
             y += 5;
+            doc.text(`Sesiones/mes: ${sessionsPerMonth}`, marginX + 2, y);
+            y += 5;
+            doc.text(`Horas/mes: ${hoursPerMonth.toFixed(1)}`, marginX + 2, y);
+            y += 5;
+            doc.text(`Subtotal: $${subtotal.toFixed(2)}`, marginX + 2, y);
+            y += 5;
+
+            if (discountPercent > 0) {
+                doc.setTextColor(150, 0, 0);
+                doc.text(`Descuento (${discountPercent}%): -$${discountAmount.toFixed(2)}`, marginX + 2, y);
+                y += 5;
+            }
+
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(11);
+            doc.setTextColor(90, 111, 94);
+            doc.text(`TOTAL MENSUAL: $${total.toFixed(2)}`, marginX + 2, y);
+            y += 10;
 
             // OBJETIVOS Y RESULTADOS
             const objetivoInfo = OBJETIVOS_INFO[goals];
