@@ -254,27 +254,29 @@ async function sendWhatsappWithPlanData(planPrincipal, planDias, planDuracion, p
 
         // Guardar consulta en backend CON datos privados (ID, panel link, datos del plan)
         const panelLink = `${window.location.origin}/admin-panel.html?id=${consultationId}`;
-        await saveConsultation({
-            consultationId: consultationId,
-            items: cartItems,
-            presencial: cartPresencial.checked,
-            note: note,
-            language: lang,
-            panelLink: panelLink,
-            // Datos del plan personalizado (privados)
-            plan: planPrincipal,
-            dias: planDias,
-            duracion: planDuracion,
-            ejercicios: planEjercicios,
-            objetivo: planObjetivo,
-            peso: planPeso,
-            altura: planAltura,
-            notasPersonalizacion: planNotas,
-            clientMessage: publicMessage
-        });
-
-        // Generar PDF profesional del plan
-        generatePersonalizedPlanPDF(planPrincipal, planDias, planDuracion, planEjercicios, planObjetivo, planPeso, planAltura, planNotas);
+        try {
+            await saveConsultation({
+                consultationId: consultationId,
+                items: cartItems,
+                presencial: cartPresencial.checked,
+                note: note,
+                language: lang,
+                panelLink: panelLink,
+                // Datos del plan personalizado (privados)
+                plan: planPrincipal,
+                dias: planDias,
+                duracion: planDuracion,
+                ejercicios: planEjercicios,
+                objetivo: planObjetivo,
+                peso: planPeso,
+                altura: planAltura,
+                notasPersonalizacion: planNotas,
+                clientMessage: publicMessage
+            });
+            console.log('✅ Consulta guardada en Firebase:', consultationId);
+        } catch (firebaseError) {
+            console.error('❌ Error guardando en Firebase:', firebaseError);
+        }
 
         // Abrir WhatsApp con mensaje público (sin datos sensibles)
         const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(publicMessage)}`;
