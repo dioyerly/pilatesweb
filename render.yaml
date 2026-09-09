@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: pilatesweb
+    runtime: static
+    buildCommand: ""
+    startCommand: ""
+    staticPublishPath: .
+    routes:
+      - path: "/*"
+        methods:
+          - GET
+        dest: /index.html
