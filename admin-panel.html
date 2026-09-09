@@ -108,6 +108,15 @@
             border-radius: 4px;
             margin-left: 10px;
         }
+        #plan-select:disabled {
+            background-color: #f0f0f0;
+            color: #666;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        #plan-select:disabled::after {
+            content: ' 🔒';
+        }
     </style>
 </head>
 <body>
@@ -432,8 +441,18 @@
         function displayConsultation() {
             document.getElementById('consultation-id-display').textContent = currentConsultationId;
 
+            const itemLabels = {
+                'plan-principiante': '🌱 Plan Principiante',
+                'plan-intermedio': '💪 Plan Intermedio',
+                'plan-avanzado': '⭐ Plan Avanzado',
+                'servicio-pilates': '🧘‍♀️ Servicio Pilates Online',
+                'servicio-nutricion': '🥗 Asesoría Nutricional',
+                'plan-combinado': '✨ Planes Combinados',
+                'clase-prueba': '🎁 Clase de Prueba'
+            };
+
             const itemsHtml = currentConsultation.items.map((item, idx) =>
-                `<div class="consultation-item">✓ ${item}</div>`
+                `<div class="consultation-item">✓ ${itemLabels[item] || item}</div>`
             ).join('');
 
             document.getElementById('consultation-items').innerHTML = itemsHtml;
@@ -449,7 +468,22 @@
             }
 
             // PRE-LLENAR FORMULARIO con datos del cliente
-            if (currentConsultation.plan) {
+            // Detectar automáticamente el plan basado en los items del carrito
+            if (currentConsultation.items && Array.isArray(currentConsultation.items)) {
+                const planItem = currentConsultation.items.find(item =>
+                    item.includes('plan-principiante') ||
+                    item.includes('plan-intermedio') ||
+                    item.includes('plan-avanzado')
+                );
+                if (planItem) {
+                    const detectedPlan = planItem.replace('plan-', '');
+                    document.getElementById('plan-select').value = detectedPlan;
+                    // Hacer read-only ya que es lo que el cliente eligió
+                    document.getElementById('plan-select').disabled = true;
+                }
+            }
+            // Fallback si no se detectó automáticamente
+            else if (currentConsultation.plan) {
                 document.getElementById('plan-select').value = currentConsultation.plan;
             }
             if (currentConsultation.dias) {
