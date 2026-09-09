@@ -226,8 +226,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="discount-percent">Descuento (%)</label>
-                        <input type="number" id="discount-percent" placeholder="0" min="0" max="100" step="5" value="0">
+                        <label for="discount-percent">Descuento (%) - Editable</label>
+                        <input type="number" id="discount-percent" placeholder="0" min="0" max="100" step="1" value="">
                     </div>
                 </div>
 
@@ -259,10 +259,6 @@
                         </div>
                     </div>
                 </div>
-
-                <button onclick="apply10PercentDiscount()" class="btn btn-secondary" style="width: 100%; margin-top: 15px; background: #e8f5e9; color: #2e7d32; border-color: #81c784;">
-                    🎁 Aplicar 10% Descuento
-                </button>
             </div>
 
             <div class="btn-group">
@@ -527,11 +523,6 @@
             document.getElementById('quote-display').style.display = 'block';
         };
 
-        // Aplicar descuento del 10%
-        window.apply10PercentDiscount = () => {
-            document.getElementById('discount-percent').value = 10;
-            calculateQuote();
-        };
 
         // Generar PDF
         window.generatePDF = async () => {
@@ -540,6 +531,8 @@
             const duration = document.getElementById('duration-select').value;
             const exerciseType = document.getElementById('exercise-type-select').value;
             const goals = document.getElementById('goals-select').value;
+            const weight = document.getElementById('weight-input').value;
+            const height = document.getElementById('height-input').value;
             const notes = document.getElementById('notes-input').value;
 
             if (!plan || !days || !duration || !exerciseType || !goals) {
@@ -559,69 +552,100 @@
             const marginR = pageWidth - 20;
             let y = 15;
 
-            // HEADER con logo
-            doc.setFont(undefined, 'bold');
-            doc.setFontSize(28);
-            doc.setTextColor(90, 111, 94); // Verde oscuro
-            doc.text('ARA TRAINER', marginX, y);
-            y += 10;
+            // FUNCIÓN AUXILIAR para agregar secciones
+            const addSection = (title, color = '1f2937') => {
+                doc.setFont(undefined, 'bold');
+                doc.setFontSize(13);
+                doc.setTextColor(parseInt(color.substr(0, 2), 16), parseInt(color.substr(2, 2), 16), parseInt(color.substr(4, 2), 16));
+                doc.text(title, marginX, y);
+                y += 8;
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(10);
+                doc.setTextColor(80, 80, 80);
+            };
 
-            doc.setFont(undefined, 'normal');
-            doc.setFontSize(11);
-            doc.setTextColor(107, 114, 128);
-            doc.text('Plan Personalizado de Pilates', marginX, y);
+            // HEADER
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(32);
+            doc.setTextColor(212, 200, 142);
+            doc.text('ARA TRAINER', marginX, y);
             y += 12;
 
-            // LÍNEA DIVISORIA
-            doc.setDrawColor(212, 200, 142); // Crema
-            doc.setLineWidth(1);
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(12);
+            doc.setTextColor(90, 111, 94);
+            doc.text('Tu Plan Personalizado de Transformación', marginX, y);
+            y += 2;
+            doc.setFontSize(9);
+            doc.setTextColor(130, 130, 130);
+            doc.text('Pilates Online + Nutrición', marginX, y);
+            y += 12;
+
+            // LÍNEA DECORATIVA
+            doc.setDrawColor(212, 200, 142);
+            doc.setLineWidth(1.5);
             doc.line(marginX, y, marginR, y);
             y += 8;
 
-            // INFORMACIÓN DEL CLIENTE
-            doc.setFont(undefined, 'bold');
-            doc.setFontSize(12);
-            doc.setTextColor(31, 41, 55);
-            doc.text('Información del Plan', marginX, y);
-            y += 7;
+            // INTRODUCCIÓN PERSONAL
+            addSection('💪 Tu Transformación Comienza Aquí');
+            const introText = `Este plan ha sido diseñado específicamente para ti según tus objetivos, nivel de experiencia y disponibilidad. No es genérico, es TUYO.`;
+            const introLines = doc.splitTextToSize(introText, 160);
+            doc.text(introLines, marginX + 2, y);
+            y += introLines.length * 5 + 5;
 
-            doc.setFont(undefined, 'normal');
-            doc.setFontSize(10);
-            doc.setTextColor(80, 80, 80);
+            // INFORMACIÓN DEL PLAN
+            addSection('📋 Tu Plan de Entrenamiento');
 
             const planLabel = plan === 'principiante' ? 'Principiante' : plan === 'intermedio' ? 'Intermedio' : 'Avanzado';
-            const exerciseLabel = exerciseType === 'mat' ? 'Pilates Mat' : exerciseType === 'reformer' ? 'Pilates Reformer' : 'Mixto';
-            const goalsLabel = OBJETIVOS_INFO[goals]?.titulo || goals;
+            const planDesc = {
+                'principiante': 'Para quienes comienzan en pilates. Resultados notables en 4-6 semanas.',
+                'intermedio': 'Para quienes tienen experiencia. Transformación visible en 2-4 semanas.',
+                'avanzado': 'Para quienes buscan especialización. Resultados máximos en 1-2 semanas.'
+            };
 
             doc.text(`Plan: ${planLabel}`, marginX + 2, y);
             y += 5;
-            doc.text(`Frecuencia: ${days} días por semana`, marginX + 2, y);
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(9);
+            doc.setTextColor(110, 110, 110);
+            doc.text(planDesc[plan], marginX + 4, y);
             y += 5;
-            doc.text(`Duración de sesión: ${duration} minutos`, marginX + 2, y);
-            y += 5;
-            doc.text(`Tipo de ejercicios: ${exerciseLabel}`, marginX + 2, y);
-            y += 5;
-            doc.text(`Objetivo: ${goalsLabel}`, marginX + 2, y);
-            y += 10;
-
-            // HORARIOS RECOMENDADOS
-            doc.setFont(undefined, 'bold');
-            doc.setFontSize(12);
-            doc.setTextColor(31, 41, 55);
-            doc.text('Horarios Recomendados', marginX, y);
-            y += 7;
 
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
             doc.setTextColor(80, 80, 80);
+            doc.text(`Frecuencia: ${days} días por semana (óptimo para resultados consistentes)`, marginX + 2, y);
+            y += 5;
+            doc.text(`Duración: ${duration} minutos por sesión (perfecto para tu rutina)`, marginX + 2, y);
+            y += 5;
+
+            const exerciseLabel = exerciseType === 'mat' ? 'Pilates Mat' : exerciseType === 'reformer' ? 'Pilates Reformer' : 'Mixto';
+            doc.text(`Tipo de ejercicios: ${exerciseLabel}`, marginX + 2, y);
+            y += 5;
+
+            const goalsLabel = OBJETIVOS_INFO[goals]?.titulo || goals;
+            doc.text(`Tu objetivo: ${goalsLabel}`, marginX + 2, y);
+            y += 5;
+
+            if (weight || height) {
+                doc.text(`Datos físicos: ${weight}kg - ${height}cm`, marginX + 2, y);
+                y += 5;
+            }
+            y += 5;
+
+            // HORARIOS RECOMENDADOS
+            addSection('🗓️ Horarios que Funcionan');
+            doc.text('Elige la opción que mejor se ajuste a tu rutina:', marginX + 2, y);
+            y += 5;
             const horarios = HORARIOS_RECOMENDADOS[days] || [];
             horarios.forEach((h, idx) => {
-                doc.text(`Opción ${idx + 1}: ${h}`, marginX + 2, y);
+                doc.text(`• Opción ${idx + 1}: ${h}`, marginX + 4, y);
                 y += 5;
             });
-            y += 10;
+            y += 5;
 
-            // COTIZACIÓN
+            // COTIZACIÓN PROFESIONAL
             const hourlyRate = parseFloat(document.getElementById('hourly-rate').value) || 50;
             const discountPercent = parseFloat(document.getElementById('discount-percent').value) || 0;
             const daysNum = parseInt(days);
@@ -633,76 +657,107 @@
             const discountAmount = subtotal * (discountPercent / 100);
             const total = subtotal - discountAmount;
 
-            doc.setFont(undefined, 'bold');
-            doc.setFontSize(12);
-            doc.setTextColor(31, 41, 55);
-            doc.text('Cotización', marginX, y);
-            y += 7;
+            addSection('💰 Tu Inversión en Transformación');
 
-            doc.setFont(undefined, 'normal');
-            doc.setFontSize(10);
-            doc.setTextColor(80, 80, 80);
-            doc.text(`Tarifa por hora: $${hourlyRate.toFixed(2)}`, marginX + 2, y);
+            doc.text(`Tarifa por sesión: $${(hourlyRate * durationInHours).toFixed(2)}`, marginX + 2, y);
             y += 5;
-            doc.text(`Sesiones/mes: ${sessionsPerMonth}`, marginX + 2, y);
+            doc.text(`Sesiones al mes: ${sessionsPerMonth} (${daysNum} días × 4.3 semanas)`, marginX + 2, y);
             y += 5;
-            doc.text(`Horas/mes: ${hoursPerMonth.toFixed(1)}`, marginX + 2, y);
-            y += 5;
-            doc.text(`Subtotal: $${subtotal.toFixed(2)}`, marginX + 2, y);
+            doc.text(`Subtotal mensual: $${subtotal.toFixed(2)}`, marginX + 2, y);
             y += 5;
 
             if (discountPercent > 0) {
-                doc.setTextColor(150, 0, 0);
-                doc.text(`Descuento (${discountPercent}%): -$${discountAmount.toFixed(2)}`, marginX + 2, y);
+                doc.setTextColor(220, 53, 69);
+                doc.text(`Descuento especial (${discountPercent}%): -$${discountAmount.toFixed(2)}`, marginX + 2, y);
                 y += 5;
+                doc.setTextColor(80, 80, 80);
             }
+
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(12);
+            doc.setTextColor(90, 111, 94);
+            doc.text(`═══════════════════════════════`, marginX + 2, y);
+            y += 5;
+            doc.setTextColor(212, 200, 142);
+            doc.text(`TOTAL MENSUAL: $${total.toFixed(2)}`, marginX + 2, y);
+            y += 8;
+            doc.setTextColor(80, 80, 80);
+
+            // RESULTADOS QUE VAS A VER
+            addSection('✨ Los Resultados que Verás');
+
+            const resultsByWeek = {
+                'principiante': ['Semana 1-2: Conexión cuerpo-mente mejorada', 'Semana 3-4: Postura notablemente mejor', 'Mes 2: Brazos y core más definidos'],
+                'intermedio': ['Semana 1-2: Muscular se activa intensamente', 'Semana 3-4: Brazos y glúteos visiblemente tonificados', 'Mes 2: Transformación física evidente'],
+                'avanzado': ['Semana 1: Cuerpo se redefine rápidamente', 'Semana 2: Cambios drásticos visibles', 'Mes 1: Transformación casi completa']
+            };
+
+            (resultsByWeek[plan] || resultsByWeek['principiante']).forEach(r => {
+                doc.text(`✓ ${r}`, marginX + 4, y);
+                y += 5;
+            });
+            y += 5;
+
+            // BENEFICIOS CLAVE
+            addSection('🎯 Lo Que Incluye Tu Plan');
+            const benefits = [
+                `${sessionsPerMonth} sesiones de pilates en vivo al mes`,
+                'Acceso a biblioteca de ejercicios 24/7 (puedes practicar después)',
+                'Plan personalizado según tu objetivo específico',
+                'Seguimiento mensual de progreso',
+                'Soporte vía email para preguntas'
+            ];
+            benefits.forEach(b => {
+                doc.text(`✓ ${b}`, marginX + 4, y);
+                y += 5;
+            });
+            y += 5;
+
+            // NOTAS ESPECIALES SI LAS HAY
+            if (notes) {
+                addSection('📝 Consideraciones Especiales');
+                const notesLines = doc.splitTextToSize(notes, 160);
+                doc.text(notesLines, marginX + 2, y);
+                y += notesLines.length * 5 + 5;
+            }
+
+            // LLAMADO A ACCIÓN
+            if (y > 240) {
+                doc.addPage();
+                y = 20;
+            }
+
+            addSection('🚀 Próximos Pasos');
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(80, 80, 80);
+            doc.text('1. Confirma tu horario elegido', marginX + 2, y);
+            y += 5;
+            doc.text('2. Realiza el pago del primer mes', marginX + 2, y);
+            y += 5;
+            doc.text('3. Recibe instrucciones de acceso', marginX + 2, y);
+            y += 5;
+            doc.text('4. Comienza tu transformación en tu próxima semana disponible', marginX + 2, y);
+            y += 8;
 
             doc.setFont(undefined, 'bold');
             doc.setFontSize(11);
             doc.setTextColor(90, 111, 94);
-            doc.text(`TOTAL MENSUAL: $${total.toFixed(2)}`, marginX + 2, y);
-            y += 10;
-
-            // OBJETIVOS Y RESULTADOS
-            const objetivoInfo = OBJETIVOS_INFO[goals];
-            if (objetivoInfo) {
-                doc.setFont(undefined, 'bold');
-                doc.setFontSize(12);
-                doc.setTextColor(31, 41, 55);
-                doc.text('Resultados Esperados', marginX, y);
-                y += 7;
-
-                doc.setFont(undefined, 'normal');
-                doc.setFontSize(10);
-                doc.setTextColor(80, 80, 80);
-                objetivoInfo.resultados.forEach((r) => {
-                    doc.text(`✓ ${r}`, marginX + 4, y);
-                    y += 5;
-                });
-            }
-
+            doc.text('¿Preguntas? Contáctame sin compromiso.', marginX, y);
             y += 5;
-
-            // NOTAS DEL CLIENTE
-            if (notes) {
-                doc.setFont(undefined, 'bold');
-                doc.setFontSize(11);
-                doc.setTextColor(31, 41, 55);
-                doc.text('Notas Especiales', marginX, y);
-                y += 6;
-
-                doc.setFont(undefined, 'normal');
-                doc.setFontSize(10);
-                doc.setTextColor(80, 80, 80);
-                const notesLines = doc.splitTextToSize(notes, 160);
-                doc.text(notesLines, marginX + 2, y);
-            }
-
-            // FOOTER
             doc.setFont(undefined, 'normal');
-            doc.setFontSize(8);
+            doc.setFontSize(10);
             doc.setTextColor(130, 130, 130);
-            doc.text('ARA TRAINER | Pilates Online + Nutrición', marginX, doc.internal.pageSize.getHeight() - 10);
+            doc.text('WhatsApp: +39 3891131525 | Email: ara@trainer.com', marginX, y);
+
+            // FOOTER DECORATIVO
+            doc.setDrawColor(212, 200, 142);
+            doc.setLineWidth(0.5);
+            doc.line(marginX, doc.internal.pageSize.getHeight() - 15, marginR, doc.internal.pageSize.getHeight() - 15);
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(7);
+            doc.setTextColor(150, 150, 150);
+            doc.text('ARA TRAINER | Transformación mediante Pilates Personalizado', marginX, doc.internal.pageSize.getHeight() - 10);
 
             // Guardar PDF
             const filename = `ara-trainer-plan-${plan}-${Date.now()}.pdf`;
@@ -718,7 +773,12 @@
                 duration: duration,
                 exerciseType: exerciseType,
                 goals: goals,
+                weight: weight,
+                height: height,
                 notes: notes,
+                discount: discountPercent,
+                hourlyRate: hourlyRate,
+                totalPrice: total,
                 pdfGenerated: true
             });
         };
