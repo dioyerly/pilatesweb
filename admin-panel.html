@@ -318,7 +318,12 @@
             const password = document.getElementById('password-input').value;
 
             if (password === ADMIN_PASSWORD) {
-                localStorage.setItem('admin-session', 'true');
+                // Guardar sesión con timestamp (válida por 24 horas)
+                const sessionData = {
+                    verified: true,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('admin-session', JSON.stringify(sessionData));
                 await loadAllConsultations();
             } else {
                 showError('Contraseña incorrecta');
@@ -398,13 +403,26 @@
 
         // Cargar consulta específica por ID en URL
         async function loadConsultation() {
-            const adminSession = localStorage.getItem('admin-session');
+            const adminSessionStr = localStorage.getItem('admin-session');
 
-            // Si no hay sesión, mostrar login primero
+            // Parsear la sesión (puede ser string antiguo 'true' o JSON)
+            let adminSession = false;
+            if (adminSessionStr) {
+                try {
+                    const sessionData = JSON.parse(adminSessionStr);
+                    adminSession = sessionData.verified === true;
+                } catch (e) {
+                    // Fallback para sesiones antiguas guardadas como 'true'
+                    adminSession = adminSessionStr === 'true';
+                }
+            }
+
+            // Si no hay sesión válida, mostrar login
             if (!adminSession) {
                 document.getElementById('login-card').style.display = 'block';
                 document.getElementById('history-card').style.display = 'none';
                 document.getElementById('form-card').style.display = 'none';
+                document.getElementById('consultation-card').style.display = 'none';
                 return;
             }
 
@@ -622,14 +640,14 @@
             y += 8;
 
             // INTRODUCCIÓN PERSONAL
-            addSection('💪 Tu Transformación Comienza Aquí');
+            addSection('Tu Transformación Comienza Aquí');
             const introText = `Este plan ha sido diseñado específicamente para ti según tus objetivos, nivel de experiencia y disponibilidad. No es genérico, es TUYO.`;
             const introLines = doc.splitTextToSize(introText, 160);
             doc.text(introLines, marginX + 2, y);
             y += introLines.length * 5 + 5;
 
             // INFORMACIÓN DEL PLAN
-            addSection('📋 Tu Plan de Entrenamiento');
+            addSection('Tu Plan de Entrenamiento');
 
             const planLabel = plan === 'principiante' ? 'Principiante' : plan === 'intermedio' ? 'Intermedio' : 'Avanzado';
             const planDesc = {
@@ -669,7 +687,7 @@
             y += 5;
 
             // HORARIOS RECOMENDADOS
-            addSection('🗓️ Horarios que Funcionan');
+            addSection('Horarios Recomendados');
             doc.text('Elige la opción que mejor se ajuste a tu rutina:', marginX + 2, y);
             y += 5;
             const horarios = HORARIOS_RECOMENDADOS[days] || [];
@@ -691,7 +709,7 @@
             const discountAmount = subtotal * (discountPercent / 100);
             const total = subtotal - discountAmount;
 
-            addSection('💰 Tu Inversión en Transformación');
+            addSection('Tu Inversión en Transformación');
 
             doc.text(`Tarifa por sesión: $${(hourlyRate * durationInHours).toFixed(2)}`, marginX + 2, y);
             y += 5;
@@ -718,7 +736,7 @@
             doc.setTextColor(80, 80, 80);
 
             // RESULTADOS QUE VAS A VER
-            addSection('✨ Los Resultados que Verás');
+            addSection('Los Resultados que Verás');
 
             const resultsByWeek = {
                 'principiante': ['Semana 1-2: Conexión cuerpo-mente mejorada', 'Semana 3-4: Postura notablemente mejor', 'Mes 2: Brazos y core más definidos'],
@@ -727,13 +745,13 @@
             };
 
             (resultsByWeek[plan] || resultsByWeek['principiante']).forEach(r => {
-                doc.text(`✓ ${r}`, marginX + 4, y);
+                doc.text(`• ${r}`, marginX + 4, y);
                 y += 5;
             });
             y += 5;
 
             // BENEFICIOS CLAVE
-            addSection('🎯 Lo Que Incluye Tu Plan');
+            addSection('Lo Que Incluye Tu Plan');
             const benefits = [
                 `${sessionsPerMonth} sesiones de pilates en vivo al mes`,
                 'Acceso a biblioteca de ejercicios 24/7 (puedes practicar después)',
@@ -742,14 +760,14 @@
                 'Soporte vía email para preguntas'
             ];
             benefits.forEach(b => {
-                doc.text(`✓ ${b}`, marginX + 4, y);
+                doc.text(`• ${b}`, marginX + 4, y);
                 y += 5;
             });
             y += 5;
 
             // NOTAS ESPECIALES SI LAS HAY
             if (notes) {
-                addSection('📝 Consideraciones Especiales');
+                addSection('Consideraciones Especiales');
                 const notesLines = doc.splitTextToSize(notes, 160);
                 doc.text(notesLines, marginX + 2, y);
                 y += notesLines.length * 5 + 5;
@@ -761,7 +779,7 @@
                 y = 20;
             }
 
-            addSection('🚀 Próximos Pasos');
+            addSection('Próximos Pasos');
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
             doc.setTextColor(80, 80, 80);
