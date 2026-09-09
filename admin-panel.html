@@ -703,17 +703,17 @@
             doc.text('Tu Plan de Entrenamiento', marginX, y);
             y += 8;
 
-            const planLabel = plan === 'principiante' ? 'PRINCIPIANTE' : plan === 'intermedio' ? 'INTERMEDIO' : 'AVANZADO';
+            const planLabel = plan === 'principiante' ? 'Principiante' : plan === 'intermedio' ? 'Intermedio' : 'Avanzado';
             const planDesc = {
-                'principiante': 'Comienzas en pilates? Perfecto. En 4-6 semanas veras cambios REALES.',
-                'intermedio': 'Ya practicas pilates? Ahora viene la TRANSFORMACION. Visible en 2-4 semanas.',
-                'avanzado': 'Buscas especializacion? Esto es para ti. Resultados MAXIMOS en 1-2 semanas.'
+                'principiante': '¿Comienzas en pilates? Perfecto. En 4-6 semanas verás cambios reales.',
+                'intermedio': '¿Ya practicas pilates? Ahora viene la transformación. Visible en 2-4 semanas.',
+                'avanzado': '¿Buscas especialización? Esto es para ti. Resultados máximos en 1-2 semanas.'
             };
 
             doc.setFont(undefined, 'bold');
             doc.setFontSize(11);
             doc.setTextColor(212, 200, 142);
-            doc.text(`PLAN ${planLabel}`, marginX + 2, y);
+            doc.text(`Plan ${planLabel}`, marginX + 2, y);
             y += 5;
 
             doc.setFont(undefined, 'normal');
@@ -735,12 +735,7 @@
             const goalsLabel = OBJETIVOS_INFO[goals]?.titulo || goals;
             doc.text(`• Objetivo: ${goalsLabel}`, marginX + 2, y);
             y += 5;
-
-            if (weight || height) {
-                doc.text(`• Datos: ${weight} kg, ${height} cm`, marginX + 2, y);
-                y += 5;
-            }
-            y += 5;
+            y += 8;
 
             // HORARIOS DISPONIBLES DEL DUEÑO
             const selectedDays = [];
@@ -828,19 +823,19 @@
 
             const resultsByWeek = {
                 'principiante': [
-                    'Semana 1-2: Sientes la conexión cuerpo-mente. Postura mejora.',
-                    'Semana 3-4: Ves los cambios. Ropa te queda diferente.',
-                    'Mes 2: Brazos y core más definidos.'
+                    'Semana 1-2: Conexión cuerpo-mente. Postura notablemente mejor.',
+                    'Semana 3-4: Cambios visibles. Ropa te queda diferente.',
+                    'Mes 2: Brazos y core más definidos. Mayor energía.'
                 ],
                 'intermedio': [
-                    'Semana 1-2: Músculos activados. Más energía.',
-                    'Semana 3-4: Brazos y glúteos tonificados. Cambios visibles.',
-                    'Mes 2: Transformación física evidente.'
+                    'Semana 1-2: Músculos activados intensamente. Más energía en el día.',
+                    'Semana 3-4: Brazos y glúteos tonificados. Cambios evidentes.',
+                    'Mes 2: Transformación física notoria. La familia lo nota.'
                 ],
                 'avanzado': [
                     'Semana 1: Cuerpo redefiniendo rápidamente. Resultados claros.',
-                    'Semana 2: Cambios visibles. Confianza aumenta.',
-                    'Mes 1: Transformación casi completa.'
+                    'Semana 2: Cambios visibles. Confianza por las nubes.',
+                    'Mes 1: Transformación casi completa. Te reconoces en el espejo.'
                 ]
             };
 
@@ -899,28 +894,28 @@
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
             doc.setTextColor(80, 80, 80);
-            doc.text('1. Confirma tu horario elegido', marginX + 2, y);
+            doc.text('1. Elige tu horario preferido', marginX + 2, y);
             y += 5;
-            doc.text('2. Realiza el pago del primer mes ($' + total.toFixed(2) + ')', marginX + 2, y);
+            doc.text('2. Confirma el pago de $' + total.toFixed(2) + ' por el primer mes', marginX + 2, y);
             y += 5;
-            doc.text('3. Recibe INSTRUCCIONES de acceso + link a plataforma', marginX + 2, y);
+            doc.text('3. Recibe instrucciones de acceso y link a plataforma', marginX + 2, y);
             y += 5;
-            doc.text('4. COMIENZA tu transformacion en tu proxima semana disponible', marginX + 2, y);
-            y += 10;
+            doc.text('4. Comienza tu transformación en tu próxima semana disponible', marginX + 2, y);
+            y += 12;
 
             doc.setFont(undefined, 'bold');
-            doc.setFontSize(12);
+            doc.setFontSize(11);
             doc.setTextColor(90, 111, 94);
-            doc.text('¿PREGUNTAS? Contactame SIN COMPROMISO.', marginX, y);
-            y += 6;
+            doc.text('¿Preguntas? Contactame sin compromiso:', marginX, y);
+            y += 8;
 
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
             doc.setTextColor(212, 200, 142);
-            doc.text('WhatsApp: +39 3891131525', marginX, y);
-            y += 4;
+            doc.text('WhatsApp: +39 389 1131525 (respondo en 1 hora)', marginX + 2, y);
+            y += 5;
             doc.setTextColor(130, 130, 130);
-            doc.text('Email: ara@trainer.com', marginX, y);
+            doc.text('Email: aranircamarl@gmail.com', marginX + 2, y);
 
             // FOOTER DECORATIVO
             doc.setDrawColor(212, 200, 142);
