@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="meta.title_home">Ara Trainer | Pilates Online + Nutrición</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav>
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="planes.html#planes-detalle" data-i18n="nav.planes">Planes</a></li>
+                <li><a href="planes.html#servicios-detalle" data-i18n="nav.servicios">Servicios</a></li>
+                <li><a href="planes.html#faq" data-i18n="nav.preguntas">Preguntas</a></li>
+                <li><a href="#certificados" data-i18n="nav.sobre_mi">Sobre Mí</a></li>
+                <li><a href="#contacto" data-i18n="nav.contacto">Contacto</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="lang-switch">
+                    <button class="lang-btn" data-lang="es">ES</button>
+                    <button class="lang-btn" data-lang="it">IT</button>
+                </div>
+                <button class="menu-toggle" data-i18n-aria-label="common.menu_aria" aria-label="Abrir menú">☰</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <img src="assets/img/logo.png" alt="Ara Trainer" class="hero-logo">
+
+            <p class="hero-tagline" data-i18n="hero.tagline">Transforma tu cuerpo y tu mente con Pilates personalizado + Asesoría Nutricional</p>
+
+            <div class="cta-buttons cta-hero">
+                <a href="planes.html" class="btn btn-primary" data-i18n="hero.cta_planes">Ver Planes</a>
+                <a href="#contacto" class="btn btn-secondary" data-i18n="hero.cta_contact">Contactar</a>
+            </div>
+
+            <div class="features">
+                <a href="planes.html#detalle-pilates" class="feature-card">
+                    <div class="feature-icon">🧘‍♀️</div>
+                    <h3 data-i18n="hero.feature1_title">Pilates Online</h3>
+                    <p data-i18n="hero.feature1_desc">Clases en vivo personalizadas, diseñadas para transformar tu cuerpo</p>
+                </a>
+                <a href="planes.html#detalle-nutricion" class="feature-card">
+                    <div class="feature-icon">🥗</div>
+                    <h3 data-i18n="hero.feature2_title">Asesoría Nutricional</h3>
+                    <p data-i18n="hero.feature2_desc">Planes personalizados para potenciar tus resultados</p>
+                </a>
+                <a href="planes.html#detalle-combinado" class="feature-card">
+                    <div class="feature-icon">✨</div>
+                    <h3 data-i18n="hero.feature3_title">Planes Combinados</h3>
+                    <p data-i18n="hero.feature3_desc">Pilates + Nutrición: la combinación perfecta</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PLANES -->
+    <section id="planes">
+        <div class="container">
+            <h2 data-i18n="planes_home.title">Elige Tu Plan</h2>
+            <p class="section-subtitle" data-i18n="planes_home.subtitle">Cada plan está diseñado para adaptarse a tu nivel y objetivos. Agregá el que te interese a tu consulta.</p>
+
+            <div class="planes-grid">
+                <!-- PLAN PRINCIPIANTE -->
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <a href="planes.html#detalle-principiante" class="plan-header-link">
+                            <div class="plan-icon">🌱</div>
+                            <div class="plan-name" data-i18n="plan.principiante.name">PRINCIPIANTE</div>
+                            <div class="plan-subtitle" data-i18n="plan.principiante.subtitle">Comienza tu viaje</div>
+                            <p class="plan-description" data-i18n="plan.principiante.desc">Perfecto para quienes inician en el mundo del pilates</p>
+                            <span class="plan-header-cta" data-i18n="common.ver_plan_completo">Ver plan completo →</span>
+                        </a>
+                    </div>
+                    <div class="plan-benefits">
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.principiante.b1">Clases en vivo personalizadas</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.principiante.b2">Acceso 24/7 a la plataforma</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.principiante.b3">Guía de nutrición básica</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.principiante.b4">Soporte vía email</span>
+                        </div>
+                    </div>
+                    <div class="plan-footer">
+                        <button class="btn btn-primary btn-add-cart" data-item-id="plan-principiante">+ Agregar a mi consulta</button>
+                    </div>
+                </div>
+
+                <!-- PLAN INTERMEDIO -->
+                <div class="plan-card destacado">
+                    <div class="plan-header">
+                        <a href="planes.html#detalle-intermedio" class="plan-header-link">
+                            <div class="plan-icon">💪</div>
+                            <div class="plan-name" data-i18n="plan.intermedio.name">INTERMEDIO</div>
+                            <div class="plan-subtitle" data-i18n="plan.intermedio.subtitle">Acelera tu progreso</div>
+                            <p class="plan-description" data-i18n="plan.intermedio.desc">Para quienes ya tienen experiencia y buscan resultados</p>
+                            <div class="plan-badge" data-i18n="plan.intermedio.badge">⭐ MÁS POPULAR</div>
+                            <span class="plan-header-cta" data-i18n="common.ver_plan_completo">Ver plan completo →</span>
+                        </a>
+                    </div>
+                    <div class="plan-benefits">
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.intermedio.b1">Clases en vivo 3x/semana</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.intermedio.b2">Plan personalizado</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.intermedio.b3">Consultas nutrición 1:1</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.intermedio.b4">Seguimiento de progreso</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.intermedio.b5">Comunidad privada</span>
+                        </div>
+                    </div>
+                    <div class="plan-footer">
+                        <button class="btn btn-primary btn-add-cart" data-item-id="plan-intermedio">+ Agregar a mi consulta</button>
+                    </div>
+                </div>
+
+                <!-- PLAN AVANZADO -->
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <a href="planes.html#detalle-avanzado" class="plan-header-link">
+                            <div class="plan-icon">⭐</div>
+                            <div class="plan-name" data-i18n="plan.avanzado.name">AVANZADO</div>
+                            <div class="plan-subtitle" data-i18n="plan.avanzado.subtitle">Transformación completa</div>
+                            <p class="plan-description" data-i18n="plan.avanzado.desc">Transformación integral con seguimiento máximo</p>
+                            <span class="plan-header-cta" data-i18n="common.ver_plan_completo">Ver plan completo →</span>
+                        </a>
+                    </div>
+                    <div class="plan-benefits">
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.avanzado.b1">Entrenamiento personalizado</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.avanzado.b2">Clases ilimitadas</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.avanzado.b3">Nutricionista dedicada</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.avanzado.b4">Plan integral pilates + nutrición</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.avanzado.b5">Seguimiento semanal</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-check">✓</span>
+                            <span data-i18n="plan.avanzado.b6">Acceso VIP prioritario</span>
+                        </div>
+                    </div>
+                    <div class="plan-footer">
+                        <button class="btn btn-primary btn-add-cart" data-item-id="plan-avanzado">+ Agregar a mi consulta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CERTIFICADOS -->
+    <section id="certificados">
+        <div class="container">
+            <h2 data-i18n="cert.title">Certificaciones</h2>
+            <p class="section-subtitle" data-i18n="cert.subtitle">Profesional certificada internacionalmente</p>
+
+            <div class="certificados-grid">
+                <div class="cert-card cert-card-featured">
+                    <a href="assets/img/certificado-allenamento-femminile.jpg" target="_blank" rel="noopener" class="cert-image-link" data-i18n-aria-label="cert.image_aria" aria-label="Ver certificado completo">
+                        <img src="assets/img/certificado-allenamento-femminile.jpg" data-i18n-alt="cert.image_alt" alt="Certificado Allenamento al Femminile" class="cert-image">
+                    </a>
+                    <div class="cert-title" data-i18n="cert.card1_title">Allenamento al Femminile</div>
+                    <div class="cert-entity">World Fitness Academy (WFA) &amp; CSEN</div>
+                    <div class="cert-detail">📍 <span data-i18n="cert.italia">Italia</span></div>
+                    <div class="cert-detail" data-i18n="cert.card1_date">📅 23 de marzo de 2025</div>
+                </div>
+
+                <div class="cert-card">
+                    <div class="cert-icon">📜</div>
+                    <div class="cert-title" data-i18n="cert.card2_title">Personal Trainer Certificada</div>
+                    <div class="cert-entity">Centro Sportivo CSEN</div>
+                    <div class="cert-detail">📍 <span data-i18n="cert.italia">Italia</span></div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <p data-i18n-html="cert.infobox"><strong>Profesora egresada de la Universidad de Educación Física y Deporte</strong>, con trayectoria profesional desde 2005. Certificada internacionalmente en Italia — CSEN, reconocido por el CONI (Comité Olímpico Nacional Italiano), y World Fitness Academy.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- HORARIOS -->
+    <section id="horarios">
+        <div class="container">
+            <h2 data-i18n="horarios.title">Disponibilidad</h2>
+            <p class="section-subtitle" data-i18n="horarios.subtitle">Encuentra el horario que se adapte a ti</p>
+
+            <div class="horario-box">
+                <div class="horario-header">
+                    <div class="horario-icon">📅</div>
+                    <h3 data-i18n="horarios.box_title">Clases Disponibles</h3>
+                </div>
+                <p data-i18n="horarios.p1">Las clases en vivo se adaptan a tu zona horaria. Sesiones 3-4 veces por semana a tu medida.</p>
+                <p data-i18n="horarios.p2_presencial">📍 ¿Estás en Italia? También podemos coordinar sesiones presenciales.</p>
+                <p data-i18n-html="horarios.p3">📱 <strong>Contacta para conocer los horarios exactos y disponibilidad actual.</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto">
+        <div class="container">
+            <h2 data-i18n="contacto.title">¿Listo para Transformarte?</h2>
+            <p class="section-subtitle" data-i18n="contacto.subtitle">Contáctame y comencemos tu viaje juntas</p>
+
+            <div class="contacto-grid">
+                <a href="https://wa.me/393891131525" target="_blank" class="contact-card">
+                    <div class="contact-icon">📱</div>
+                    <h3 data-i18n="contacto.whatsapp_title">WhatsApp</h3>
+                    <p class="contact-link">+39 389 1131525</p>
+                    <p class="contact-subtitle" data-i18n="contacto.whatsapp_sub">Respuesta inmediata</p>
+                </a>
+
+                <a href="mailto:aranircamarl@gmail.com" class="contact-card">
+                    <div class="contact-icon">✉️</div>
+                    <h3 data-i18n="contacto.email_title">Email</h3>
+                    <p class="contact-link">aranircamarl@gmail.com</p>
+                    <p class="contact-subtitle" data-i18n="contacto.email_sub">Consultas detalladas</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p data-i18n="footer.rights">© 2025 Ara Trainer. Todos los derechos reservados.</p>
+        <p data-i18n="footer.made_by">Hecho con 💚 por Aranirca Marcano</p>
+        <p class="footer-small" data-i18n="footer.tagline">Entrenador Personal Certificado | Pilates Online | Nutrición</p>
+    </footer>
+
+    <!-- CARRITO DE CONSULTA -->
+    <button id="cart-fab" class="cart-fab" data-i18n-aria-label="cart.fab_aria" aria-label="Abrir mi consulta">
+        🛒
+        <span id="cart-count" class="cart-badge">0</span>
+    </button>
+
+    <div id="cart-overlay" class="cart-overlay"></div>
+
+    <aside id="cart-drawer" class="cart-drawer">
+        <div class="cart-header">
+            <h3 data-i18n="cart.title">Mi Consulta</h3>
+            <button id="cart-close" class="cart-close" data-i18n-aria-label="cart.close_aria" aria-label="Cerrar">&times;</button>
+        </div>
+
+        <div id="cart-items" class="cart-items"></div>
+
+        <div id="cart-empty" class="cart-empty">
+            <p data-i18n="cart.empty_line1">Todavía no agregaste nada.</p>
+            <p class="cart-empty-sub" data-i18n="cart.empty_line2">Elegí un plan o servicio que te interese ✨</p>
+        </div>
+
+        <div class="cart-footer">
+            <label class="checkbox-label" for="cart-presencial">
+                <input type="checkbox" id="cart-presencial">
+                <span data-i18n="cart.presencial_label">📍 Prefiero modalidad presencial (si estoy en Italia)</span>
+            </label>
+            <label for="cart-note" data-i18n="cart.note_label">Comentario adicional (opcional)</label>
+            <textarea id="cart-note" rows="3" data-i18n-placeholder="cart.note_placeholder" placeholder="Ej: prefiero horario de tarde..."></textarea>
+            <button id="cart-whatsapp" class="btn btn-primary cart-btn" data-i18n="cart.btn_whatsapp">📱 Enviar consulta por WhatsApp</button>
+            <button id="cart-pdf" class="btn btn-secondary cart-btn" data-i18n="cart.btn_pdf">📄 Descargar resumen en PDF</button>
+        </div>
+    </aside>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="meta.title_planes">Planes y Servicios | Ara Trainer</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav>
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="planes.html#planes-detalle" data-i18n="nav.planes">Planes</a></li>
+                <li><a href="planes.html#servicios-detalle" data-i18n="nav.servicios">Servicios</a></li>
+                <li><a href="planes.html#faq" data-i18n="nav.preguntas">Preguntas</a></li>
+                <li><a href="index.html#certificados" data-i18n="nav.sobre_mi">Sobre Mí</a></li>
+                <li><a href="index.html#contacto" data-i18n="nav.contacto">Contacto</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="lang-switch">
+                    <button class="lang-btn" data-lang="es">ES</button>
+                    <button class="lang-btn" data-lang="it">IT</button>
+                </div>
+                <button class="menu-toggle" data-i18n-aria-label="common.menu_aria" aria-label="Abrir menú">☰</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO DE DETALLE -->
+    <section class="detalle-hero">
+        <div class="container">
+            <a href="index.html" class="breadcrumb-link" data-i18n="detalle.breadcrumb">← Volver al inicio</a>
+            <h1 data-i18n="detalle.hero_title">Elegí tu camino</h1>
+            <p class="hero-tagline" data-i18n="detalle.hero_subtitle">Conocé en detalle cada servicio y plan, y armá tu consulta a medida. Sin compromiso, vos decidís qué te interesa.</p>
+        </div>
+    </section>
+
+    <!-- COMO TRABAJAMOS -->
+    <section class="metodologia">
+        <div class="container">
+            <h2 data-i18n="metodo.title">Cómo Trabajamos</h2>
+            <p class="section-subtitle" data-i18n="metodo.subtitle">Un proceso simple, pensado para que veas resultados reales</p>
+            <div class="metodologia-grid">
+                <div class="metodo-step">
+                    <div class="metodo-number">1</div>
+                    <h3 data-i18n="metodo.step1_title">Diagnóstico inicial</h3>
+                    <p data-i18n="metodo.step1_desc">Conversamos sobre tu nivel, tus objetivos y tu disponibilidad para armar una propuesta a tu medida.</p>
+                </div>
+                <div class="metodo-step">
+                    <div class="metodo-number">2</div>
+                    <h3 data-i18n="metodo.step2_title">Plan personalizado</h3>
+                    <p data-i18n="metodo.step2_desc">Definimos juntas el plan de Pilates, nutrición o combinado que mejor se adapta a vos.</p>
+                </div>
+                <div class="metodo-step">
+                    <div class="metodo-number">3</div>
+                    <h3 data-i18n="metodo.step3_title">Acompañamiento</h3>
+                    <p data-i18n="metodo.step3_desc">Clases y seguimiento continuo, con ajustes según cómo vayas evolucionando.</p>
+                </div>
+                <div class="metodo-step">
+                    <div class="metodo-number">4</div>
+                    <h3 data-i18n="metodo.step4_title">Resultados sostenibles</h3>
+                    <p data-i18n="metodo.step4_desc">Construimos hábitos que se mantienen en el tiempo, no soluciones rápidas y pasajeras.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICIOS EN DETALLE -->
+    <section id="servicios-detalle">
+        <div class="container">
+            <h2 data-i18n="servdet.title">Nuestros Servicios</h2>
+            <p class="section-subtitle" data-i18n="servdet.subtitle">Tocá cada servicio para ver qué incluye</p>
+
+            <div class="accordion-item" id="detalle-pilates">
+                <div class="detalle-card-header">
+                    <div class="servicio-icon">🧘‍♀️</div>
+                    <div>
+                        <h3 data-i18n="hero.feature1_title">Pilates Online</h3>
+                        <p class="detalle-card-subtitle" data-i18n="servdet.pilates.subtitle">Mueve tu cuerpo a tu ritmo, donde y cuando quieras.</p>
+                    </div>
+                </div>
+                <button class="accordion-toggle" aria-expanded="false">
+                    <span data-i18n="common.ver_que_incluye">Ver qué incluye</span>
+                    <span class="accordion-icon">⌄</span>
+                </button>
+                <div class="accordion-panel">
+                    <h4 data-i18n="common.q_consiste">¿En qué consiste?</h4>
+                    <p data-i18n="servdet.pilates.a1">Sesiones en vivo adaptadas a tu nivel desde cualquier lugar. Aprendés a escuchar tu cuerpo y a mejorar tu postura sin salir de casa.</p>
+                    <h4 data-i18n="common.q_necesitas">Lo que necesitás para empezar</h4>
+                    <p data-i18n="servdet.pilates.a2">Un espacio despejado, un mat o una toalla, y conexión a internet.</p>
+                    <h4 data-i18n="common.q_resultados">Resultados clave</h4>
+                    <p data-i18n="servdet.pilates.a3">Mayor flexibilidad, tonificación muscular, corrección postural y menos estrés en el día a día.</p>
+                    <p class="accordion-price-note" data-i18n="horarios.p2_presencial">📍 ¿Estás en Italia? También podemos coordinar sesiones presenciales.</p>
+                    <div class="accordion-cta">
+                        <button class="btn btn-primary btn-add-cart" data-item-id="servicio-pilates">+ Agregar a mi consulta</button>
+                        <button class="btn btn-secondary btn-small btn-add-cart" data-item-id="clase-prueba">🎁 Quiero una clase de prueba</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item" id="detalle-nutricion">
+                <div class="detalle-card-header">
+                    <div class="servicio-icon">🥗</div>
+                    <div>
+                        <h3 data-i18n="hero.feature2_title">Asesoría Nutricional</h3>
+                        <p class="detalle-card-subtitle" data-i18n="servdet.nutricion.subtitle">Nutrición real, flexible y adaptada a tus metas.</p>
+                    </div>
+                </div>
+                <button class="accordion-toggle" aria-expanded="false">
+                    <span data-i18n="common.ver_que_incluye">Ver qué incluye</span>
+                    <span class="accordion-icon">⌄</span>
+                </button>
+                <div class="accordion-panel">
+                    <h4 data-i18n="common.q_consiste">¿En qué consiste?</h4>
+                    <p data-i18n="servdet.nutricion.a1">Planes de alimentación personalizados para potenciar tu energía y complementar tu actividad física, sin dietas restrictivas ni prohibiciones extremas.</p>
+                    <h4 data-i18n="common.q_necesitas">Lo que necesitás para empezar</h4>
+                    <p data-i18n="servdet.nutricion.a2">Contarnos tus hábitos actuales, tus preferencias alimentarias y tus objetivos de salud en una charla inicial.</p>
+                    <h4 data-i18n="common.q_resultados">Resultados clave</h4>
+                    <p data-i18n="servdet.nutricion.a3">Mejor relación con la comida, más energía en el día a día y una composición corporal más saludable.</p>
+                    <div class="accordion-cta">
+                        <button class="btn btn-primary btn-add-cart" data-item-id="servicio-nutricion">+ Agregar a mi consulta</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item" id="detalle-combinado">
+                <div class="detalle-card-header">
+                    <div class="servicio-icon">✨</div>
+                    <div>
+                        <h3 data-i18n="hero.feature3_title">Planes Combinados</h3>
+                        <p class="detalle-card-subtitle" data-i18n="servdet.combinado.subtitle">La sinergia perfecta para transformar tu bienestar integral.</p>
+                    </div>
+                </div>
+                <button class="accordion-toggle" aria-expanded="false">
+                    <span data-i18n="common.ver_que_incluye">Ver qué incluye</span>
+                    <span class="accordion-icon">⌄</span>
+                </button>
+                <div class="accordion-panel">
+                    <h4 data-i18n="common.q_consiste">¿En qué consiste?</h4>
+                    <p data-i18n="servdet.combinado.a1">Un enfoque 360° que combina el movimiento guiado de Pilates con un seguimiento nutricional a medida, para resultados más completos en menos tiempo.</p>
+                    <h4 data-i18n="common.q_necesitas">Lo que necesitás para empezar</h4>
+                    <p data-i18n="servdet.combinado.a2">Compromiso personal y ganas de sumar pequeños hábitos a tu rutina diaria.</p>
+                    <h4 data-i18n="common.q_resultados">Resultados clave</h4>
+                    <p data-i18n="servdet.combinado.a3">Cambio físico integral, menos molestias articulares, mejor descanso y seguimiento personalizado constante.</p>
+                    <div class="accordion-cta">
+                        <button class="btn btn-primary btn-add-cart" data-item-id="plan-combinado">+ Agregar a mi consulta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PLANES EN DETALLE -->
+    <section id="planes-detalle" style="background: #f9fafb;">
+        <div class="container">
+            <h2 data-i18n="plandet.title">Planes en Detalle</h2>
+            <p class="section-subtitle" data-i18n="plandet.subtitle">Tocá cada plan para ver el detalle completo</p>
+
+            <div class="accordion-item" id="detalle-principiante">
+                <div class="detalle-card-header">
+                    <div class="plan-icon">🌱</div>
+                    <div>
+                        <h3 data-i18n="plandet.principiante.name">Principiante — Comienza tu viaje</h3>
+                        <p class="detalle-card-audience" data-i18n="plandet.principiante.audience">Dirigido a quienes se inician en Pilates o llevan tiempo sin hacer actividad física.</p>
+                    </div>
+                </div>
+                <button class="accordion-toggle" aria-expanded="false">
+                    <span data-i18n="common.ver_plan_completo">Ver plan completo</span>
+                    <span class="accordion-icon">⌄</span>
+                </button>
+                <div class="accordion-panel">
+                    <h4 data-i18n="common.punto_partida">Punto de partida</h4>
+                    <p data-i18n="plandet.principiante.partida">Alineación postural, respiración consciente y activación del core.</p>
+                    <h4 data-i18n="common.que_incluye">Qué incluye</h4>
+                    <p data-i18n="plandet.principiante.incluye">Clases guiadas con progresiones suaves y guía de nutrición básica de iniciación.</p>
+                    <h4 data-i18n="common.equipamiento">Equipamiento</h4>
+                    <p data-i18n="plandet.principiante.equipo">Ninguno técnico — alcanza con una toalla si no tenés mat.</p>
+                    <h4 data-i18n="common.soporte">Soporte</h4>
+                    <p data-i18n="plandet.principiante.soporte">Asistencia por email para tus dudas iniciales.</p>
+                    <p class="accordion-price-note" data-i18n="common.precio_nota">💬 Precio personalizado según tu plan — lo conversamos por WhatsApp.</p>
+                    <div class="accordion-cta">
+                        <button class="btn btn-primary btn-add-cart" data-item-id="plan-principiante">+ Agregar a mi consulta</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item destacado" id="detalle-intermedio">
+                <div class="detalle-card-header">
+                    <div class="plan-icon">💪</div>
+                    <div>
+                        <span class="detalle-badge" data-i18n="plan.intermedio.badge">⭐ MÁS POPULAR</span>
+                        <h3 data-i18n="plandet.intermedio.name">Intermedio — Acelera tu progreso</h3>
+                        <p class="detalle-card-audience" data-i18n="plandet.intermedio.audience">Dirigido a quienes ya tienen práctica previa y buscan tonificar y ganar resistencia.</p>
+                    </div>
+                </div>
+                <button class="accordion-toggle" aria-expanded="false">
+                    <span data-i18n="common.ver_plan_completo">Ver plan completo</span>
+                    <span class="accordion-icon">⌄</span>
+                </button>
+                <div class="accordion-panel">
+                    <h4 data-i18n="common.punto_partida">Punto de partida</h4>
+                    <p data-i18n="plandet.intermedio.partida">Mayor intensidad, control del equilibrio y combinaciones de fuerza fluida.</p>
+                    <h4 data-i18n="common.que_incluye">Qué incluye</h4>
+                    <p data-i18n="plandet.intermedio.incluye">Clases en vivo 3x/semana, plan nutricional personalizado y consultas 1:1.</p>
+                    <h4 data-i18n="common.equipamiento">Equipamiento</h4>
+                    <p data-i18n="plandet.intermedio.equipo">Mat de Pilates y elementos caseros opcionales (bandas elásticas, botellas pequeñas).</p>
+                    <h4 data-i18n="common.soporte">Soporte</h4>
+                    <p data-i18n="plandet.intermedio.soporte">Seguimiento mensual de tu progreso y acompañamiento directo.</p>
+                    <p class="accordion-price-note" data-i18n="common.precio_nota">💬 Precio personalizado según tu plan — lo conversamos por WhatsApp.</p>
+                    <div class="accordion-cta">
+                        <button class="btn btn-primary btn-add-cart" data-item-id="plan-intermedio">+ Agregar a mi consulta</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item" id="detalle-avanzado">
+                <div class="detalle-card-header">
+                    <div class="plan-icon">⭐</div>
+                    <div>
+                        <h3 data-i18n="plandet.avanzado.name">Avanzado — Transformación completa</h3>
+                        <p class="detalle-card-audience" data-i18n="plandet.avanzado.audience">Dirigido a personas constantes que buscan máxima exigencia y un cambio integral.</p>
+                    </div>
+                </div>
+                <button class="accordion-toggle" aria-expanded="false">
+                    <span data-i18n="common.ver_plan_completo">Ver plan completo</span>
+                    <span class="accordion-icon">⌄</span>
+                </button>
+                <div class="accordion-panel">
+                    <h4 data-i18n="common.punto_partida">Punto de partida</h4>
+                    <p data-i18n="plandet.avanzado.partida">Secuencias complejas, trabajo de fuerza con mayor propiocepción y nutrición optimizada.</p>
+                    <h4 data-i18n="common.que_incluye">Qué incluye</h4>
+                    <p data-i18n="plandet.avanzado.incluye">Entrenamiento personalizado, clases ilimitadas, nutricionista dedicada y plan 100% a medida.</p>
+                    <h4 data-i18n="common.equipamiento">Equipamiento</h4>
+                    <p data-i18n="plandet.avanzado.equipo">Mat y accesorios variados para sumar resistencia.</p>
+                    <h4 data-i18n="common.soporte">Soporte</h4>
+                    <p data-i18n="plandet.avanzado.soporte">Acceso prioritario y seguimiento semanal por WhatsApp.</p>
+                    <p class="accordion-price-note" data-i18n="common.precio_nota">💬 Precio personalizado según tu plan — lo conversamos por WhatsApp.</p>
+                    <div class="accordion-cta">
+                        <button class="btn btn-primary btn-add-cart" data-item-id="plan-avanzado">+ Agregar a mi consulta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+        <div class="container">
+            <h2 data-i18n="faq.title">Preguntas Frecuentes</h2>
+            <p class="section-subtitle" data-i18n="faq.subtitle">Lo que más nos preguntan antes de empezar</p>
+
+            <div class="accordion-item">
+                <button class="accordion-toggle" aria-expanded="false">
+                    <span data-i18n="faq.q1">¿Cómo puedo probar antes de decidirme?</span>
+                    <span class="accordion-icon">⌄</span>
+                </button>
+                <div class="accordion-panel">
+                    <p data-i18n="faq.a1">Agregá "Clase de prueba" a tu consulta o escribinos directo por WhatsApp, y coordinamos una clase para que conozcas la modalidad antes de sumarte a un plan.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-toggle" aria-expanded="false">
+                    <span data-i18n="faq.q2">¿Cuánto duran las clases?</span>
+                    <span class="accordion-icon">⌄</span>
+                </button>
+                <div class="accordion-panel">
+                    <p data-i18n="faq.a2">Hay sesiones cortas de 15 a 20 minutos para los días con poco tiempo, y rutinas completas de 45 a 50 minutos.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-toggle" aria-expanded="false">
+                    <span data-i18n="faq.q3">¿Necesito algún equipo para empezar?</span>
+                    <span class="accordion-icon">⌄</span>
+                </button>
+                <div class="accordion-panel">
+                    <p data-i18n="faq.a3">No. Un mat es ideal, pero podés arrancar perfectamente con una toalla sobre una superficie cómoda.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-toggle" aria-expanded="false">
+                    <span data-i18n="faq.q4">¿Puedo empezar si hace mucho tiempo que no hago actividad física?</span>
+                    <span class="accordion-icon">⌄</span>
+                </button>
+                <div class="accordion-panel">
+                    <p data-i18n="faq.a4">Sí — para eso está pensado el Plan Principiante, con adaptaciones seguras para recuperar movilidad a tu propio ritmo.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-toggle" aria-expanded="false">
+                    <span data-i18n="faq.q5">¿El Pilates tiene ejercicios de impacto?</span>
+                    <span class="accordion-icon">⌄</span>
+                </button>
+                <div class="accordion-panel">
+                    <p data-i18n="faq.a5">No. Es una disciplina de bajo impacto articular, ideal para cuidar tu columna y tus articulaciones.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-toggle" aria-expanded="false">
+                    <span data-i18n="faq.q6">¿Puedo empezar en cualquier momento del mes?</span>
+                    <span class="accordion-icon">⌄</span>
+                </button>
+                <div class="accordion-panel">
+                    <p data-i18n="faq.a6">Sí, no hay fechas fijas de inicio — arrancamos cuando vos estés list@.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-toggle" aria-expanded="false">
+                    <span data-i18n="faq.q7">¿Cómo sé cuánto cuesta cada plan?</span>
+                    <span class="accordion-icon">⌄</span>
+                </button>
+                <div class="accordion-panel">
+                    <p data-i18n="faq.a7">Los precios se arman a medida según el plan y la frecuencia elegida. Agregá lo que te interesa a "Mi Consulta" y te respondemos por WhatsApp con el valor.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="cta-final">
+        <div class="container">
+            <h2 data-i18n="ctafinal.title">¿List@ para empezar?</h2>
+            <p class="section-subtitle" data-i18n="ctafinal.subtitle">Revisá lo que agregaste a tu consulta y enviámelo, o escribime directo por WhatsApp</p>
+            <div class="cta-final-buttons">
+                <button id="open-cart-final" class="btn btn-on-primary" data-i18n="ctafinal.btn_cart">🛒 Ver mi consulta</button>
+                <a href="https://wa.me/393891131525" target="_blank" class="btn btn-outline-white" data-i18n="ctafinal.btn_whatsapp">💬 Escribir por WhatsApp</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p data-i18n="footer.rights">© 2025 Ara Trainer. Todos los derechos reservados.</p>
+        <p data-i18n="footer.made_by">Hecho con 💚 por Aranirca Marcano</p>
+        <p class="footer-small" data-i18n="footer.tagline">Entrenador Personal Certificado | Pilates Online | Nutrición</p>
+    </footer>
+
+    <!-- CARRITO DE CONSULTA -->
+    <button id="cart-fab" class="cart-fab" data-i18n-aria-label="cart.fab_aria" aria-label="Abrir mi consulta">
+        🛒
+        <span id="cart-count" class="cart-badge">0</span>
+    </button>
+
+    <div id="cart-overlay" class="cart-overlay"></div>
+
+    <aside id="cart-drawer" class="cart-drawer">
+        <div class="cart-header">
+            <h3 data-i18n="cart.title">Mi Consulta</h3>
+            <button id="cart-close" class="cart-close" data-i18n-aria-label="cart.close_aria" aria-label="Cerrar">&times;</button>
+        </div>
+
+        <div id="cart-items" class="cart-items"></div>
+
+        <div id="cart-empty" class="cart-empty">
+            <p data-i18n="cart.empty_line1">Todavía no agregaste nada.</p>
+            <p class="cart-empty-sub" data-i18n="cart.empty_line2">Elegí un plan o servicio que te interese ✨</p>
+        </div>
+
+        <div class="cart-footer">
+            <label class="checkbox-label" for="cart-presencial">
+                <input type="checkbox" id="cart-presencial">
+                <span data-i18n="cart.presencial_label">📍 Prefiero modalidad presencial (si estoy en Italia)</span>
+            </label>
+            <label for="cart-note" data-i18n="cart.note_label">Comentario adicional (opcional)</label>
+            <textarea id="cart-note" rows="3" data-i18n-placeholder="cart.note_placeholder" placeholder="Ej: prefiero horario de tarde..."></textarea>
+            <button id="cart-whatsapp" class="btn btn-primary cart-btn" data-i18n="cart.btn_whatsapp">📱 Enviar consulta por WhatsApp</button>
+            <button id="cart-pdf" class="btn btn-secondary cart-btn" data-i18n="cart.btn_pdf">📄 Descargar resumen en PDF</button>
+        </div>
+    </aside>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/accordion.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>
