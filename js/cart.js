@@ -62,11 +62,17 @@ function isInCart(id) {
 }
 
 function toggleItem(id) {
-    cartItems = isInCart(id)
+    const wasInCart = isInCart(id);
+    cartItems = wasInCart
         ? cartItems.filter(i => i !== id)
         : [...cartItems, id];
     saveCart(cartItems);
     renderAll();
+
+    // Abrir drawer automáticamente si se agregó un item
+    if (!wasInCart) {
+        openDrawer();
+    }
 }
 
 function removeItem(id) {
@@ -500,96 +506,22 @@ document.querySelectorAll('.btn-add-cart').forEach(btn => {
 });
 
 function handleCartSubmit() {
-    const formContent = document.getElementById('cart-form-content');
-    const isFormFilled = formContent && formContent.style.display !== 'none' &&
-        document.getElementById('plan-dias').value &&
-        document.getElementById('plan-duracion').value &&
-        document.getElementById('plan-ejercicios').value &&
-        document.getElementById('plan-objetivo').value &&
-        document.getElementById('plan-peso').value &&
-        document.getElementById('plan-altura').value;
+    // El formulario personalizado es OBLIGATORIO
+    const planDias = document.getElementById('plan-dias').value;
+    const planDuracion = document.getElementById('plan-duracion').value;
+    const planEjercicios = document.getElementById('plan-ejercicios').value;
+    const planObjetivo = document.getElementById('plan-objetivo').value;
+    const planPeso = document.getElementById('plan-peso').value;
+    const planAltura = document.getElementById('plan-altura').value;
 
-    if (isFormFilled) {
-        submitPlanForm();
-    } else {
-        sendSimpleCartWhatsapp();
-    }
-}
-
-async function sendSimpleCartWhatsapp() {
-    if (cartItems.length === 0) {
-        alert(t('cart.empty_line1'));
+    if (!planDias || !planDuracion || !planEjercicios || !planObjetivo || !planPeso || !planAltura) {
+        alert(t('cart.form_required') || 'Por favor completa TODOS los campos del formulario personalizado (*). Estos datos son necesarios para crear tu plan a medida.');
+        document.getElementById('cart-form-content').style.display = 'block';
+        document.getElementById('cart-form-toggle').scrollIntoView({ behavior: 'smooth' });
         return;
     }
 
-    const btn = cartWhatsappBtn;
-    const originalText = btn.textContent;
-    btn.textContent = t('cart.sending') || 'Enviando...';
-    btn.disabled = true;
-
-    try {
-        const consultationId = generateConsultationId();
-        const lang = getLang();
-
-        // MENSAJE PÚBLICO para WhatsApp (solo información del cliente, sin datos sensibles)
-        let publicMessage = `${t('cart.whatsapp_greeting')}\n\n`;
-        publicMessage += `📋 *${t('cart.title')}:*\n`;
-
-        buildSummaryLines().forEach(line => {
-            publicMessage += line + '\n';
-        });
-
-        if (cartPresencial.checked) {
-            publicMessage += `\n📍 ${t('cart.whatsapp_presencial_line')}`;
-        }
-
-        const note = cartNote.value.trim();
-        if (note) {
-            publicMessage += `\n\n💬 *${t('cart.comments') || 'COMENTARIOS'}:*\n${note}`;
-        }
-
-        // NO incluir ID ni link del panel en el mensaje público
-        publicMessage += `\n\n${t('cart.whatsapp_closing')}`;
-
-        // Guardar consulta en backend CON ID y link (privado, solo para propietario)
-        const panelLink = `${window.location.origin}/admin-panel.html?id=${consultationId}`;
-        await saveConsultation({
-            consultationId,
-            items: cartItems,
-            presencial: cartPresencial.checked,
-            note: note,
-            language: lang,
-            panelLink: panelLink,
-            clientMessage: publicMessage
-        });
-
-        // Abrir WhatsApp con mensaje público (sin datos sensibles)
-        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(publicMessage)}`;
-
-        // Para móvil, usar protocolo de WhatsApp si está disponible
-        if (/Mobile|Android|iPhone/.test(navigator.userAgent)) {
-            window.location.href = url;
-        } else {
-            window.open(url, '_blank');
-        }
-
-        // Limpiar carrito después de 2 segundos
-        setTimeout(() => {
-            cartItems = [];
-            saveCart([]);
-            cartNote.value = '';
-            cartPresencial.checked = false;
-            renderAll();
-            closeDrawer();
-        }, 2000);
-
-    } catch (error) {
-        console.error('Error sending consultation:', error);
-        alert('Error al enviar. Intenta de nuevo.');
-    } finally {
-        btn.textContent = originalText;
-        btn.disabled = false;
-    }
+    submitPlanForm();
 }
 
 cartFab.addEventListener('click', openDrawer);
