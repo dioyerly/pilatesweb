@@ -949,6 +949,11 @@ footer p {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    flex-shrink: 0;
+    background: white;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
 }
 
 .cart-footer label {
@@ -1394,6 +1399,9 @@ a.logo {
     .cart-footer {
         padding: 16px;
         gap: 12px;
+        position: sticky;
+        bottom: 0;
+        z-index: 10;
     }
 
     .cart-footer textarea {
