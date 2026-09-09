@@ -22,7 +22,6 @@ const cartEmptyEl = document.getElementById('cart-empty');
 const cartNote = document.getElementById('cart-note');
 const cartPresencial = document.getElementById('cart-presencial');
 const cartWhatsappBtn = document.getElementById('cart-whatsapp');
-const cartPdfBtn = document.getElementById('cart-pdf');
 
 function loadCart() {
     try {
@@ -144,22 +143,28 @@ function sendWhatsapp() {
         return;
     }
 
-    let message = `${t('cart.whatsapp_greeting')}\n\n`;
-    message += buildSummaryLines().join('\n');
+    // Generar PDF automáticamente
+    downloadPdf();
 
-    if (cartPresencial.checked) {
-        message += `\n\n${t('cart.whatsapp_presencial_line')}`;
-    }
+    // Esperar un poco para que el PDF se descargue, luego abrir WhatsApp
+    setTimeout(() => {
+        let message = `${t('cart.whatsapp_greeting')}\n\n`;
+        message += buildSummaryLines().join('\n');
 
-    const note = cartNote.value.trim();
-    if (note) {
-        message += `\n\n${t('cart.whatsapp_comment_label')} ${note}`;
-    }
+        if (cartPresencial.checked) {
+            message += `\n\n${t('cart.whatsapp_presencial_line')}`;
+        }
 
-    message += `\n\n${t('cart.whatsapp_closing')}`;
+        const note = cartNote.value.trim();
+        if (note) {
+            message += `\n\n${t('cart.whatsapp_comment_label')} ${note}`;
+        }
 
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+        message += `\n\n${t('cart.whatsapp_closing')}`;
+
+        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+    }, 500);
 }
 
 function downloadPdf() {
@@ -358,7 +363,6 @@ cartFab.addEventListener('click', openDrawer);
 cartCloseBtn.addEventListener('click', closeDrawer);
 cartOverlay.addEventListener('click', closeDrawer);
 cartWhatsappBtn.addEventListener('click', sendWhatsapp);
-cartPdfBtn.addEventListener('click', downloadPdf);
 
 const openCartFinalBtn = document.getElementById('open-cart-final');
 if (openCartFinalBtn) {
