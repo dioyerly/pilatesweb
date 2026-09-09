@@ -117,7 +117,10 @@
                 <h1>🎯 Panel de Respuesta</h1>
                 <p style="margin: 5px 0 0 0; color: var(--text-gray); font-size: 14px;">Genera el plan personalizado para el cliente</p>
             </div>
-            <button onclick="logout()" class="btn btn-secondary">← Cerrar sesión</button>
+            <div style="display: flex; gap: 10px;">
+                <button id="back-button" onclick="backToList()" class="btn btn-secondary" style="display: none;">📋 Volver a consultas</button>
+                <button onclick="logout()" class="btn btn-secondary">← Cerrar sesión</button>
+            </div>
         </div>
 
         <div id="error-message" class="error" style="display: none;"></div>
@@ -383,12 +386,23 @@
             document.getElementById('history-card').style.display = 'none';
             document.getElementById('form-card').style.display = 'block';
             document.getElementById('consultation-card').style.display = 'block';
+            document.getElementById('back-button').style.display = 'block';
 
             displayConsultation();
         }
 
         // Cargar consulta específica por ID en URL
         async function loadConsultation() {
+            const adminSession = localStorage.getItem('admin-session');
+
+            // Si no hay sesión, mostrar login primero
+            if (!adminSession) {
+                document.getElementById('login-card').style.display = 'block';
+                document.getElementById('history-card').style.display = 'none';
+                document.getElementById('form-card').style.display = 'none';
+                return;
+            }
+
             currentConsultationId = getConsultationIdFromURL();
 
             if (!currentConsultationId) {
@@ -408,6 +422,7 @@
                 document.getElementById('login-card').style.display = 'none';
                 document.getElementById('form-card').style.display = 'block';
                 document.getElementById('consultation-card').style.display = 'block';
+                document.getElementById('back-button').style.display = 'block';
 
                 // Mostrar detalles de la consulta
                 displayConsultation();
@@ -719,6 +734,18 @@
         };
 
         // Cerrar sesión
+        // Volver a la lista de consultas
+        window.backToList = async () => {
+            document.getElementById('consultation-card').style.display = 'none';
+            document.getElementById('form-card').style.display = 'none';
+            document.getElementById('history-card').style.display = 'block';
+            document.getElementById('back-button').style.display = 'none';
+            currentConsultationId = null;
+            currentConsultation = null;
+            // Recargar lista de consultas
+            await loadAllConsultations();
+        };
+
         window.logout = () => {
             localStorage.removeItem('admin-session');
             window.location.href = window.location.origin;
