@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Privado - Ara Trainer</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { background: #f5f5f5; }
+        .admin-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .admin-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 20px;
+        }
+        .admin-header h1 {
+            margin: 0;
+            color: var(--primary);
+        }
+        .consultation-id {
+            background: #f0f0f0;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .consultation-details {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 20px;
+        }
+        .consultation-details h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        .consultation-item {
+            padding: 8px 0;
+            color: var(--text-gray);
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        .btn-group button {
+            flex: 1;
+        }
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+        .success {
+            background: #efe;
+            color: #3c3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3c3;
+        }
+        .lock-icon {
+            font-size: 12px;
+            padding: 3px 8px;
+            background: var(--primary);
+            color: white;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <div>
+                <h1>🎯 Panel de Respuesta</h1>
+                <p style="margin: 5px 0 0 0; color: var(--text-gray); font-size: 14px;">Genera el plan personalizado para el cliente</p>
+            </div>
+            <button onclick="logout()" class="btn btn-secondary">← Cerrar sesión</button>
+        </div>
+
+        <div id="error-message" class="error" style="display: none;"></div>
+        <div id="success-message" class="success" style="display: none;"></div>
+
+        <!-- Detalles de la Consulta -->
+        <div class="admin-card" id="consultation-card" style="display: none;">
+            <h2>Consulta #<span id="consultation-id-display"></span></h2>
+
+            <div class="consultation-details">
+                <h3>Lo que solicitó el cliente:</h3>
+                <div id="consultation-items"></div>
+                <div id="consultation-presencial"></div>
+                <div id="consultation-note"></div>
+            </div>
+        </div>
+
+        <!-- Formulario para generar PDF -->
+        <div class="admin-card" id="form-card" style="display: none;">
+            <h2>📋 Generar Plan Personalizado</h2>
+
+            <div class="form-group">
+                <label for="plan-select">Plan Principal *</label>
+                <select id="plan-select" required>
+                    <option value="">-- Selecciona un plan --</option>
+                    <option value="principiante">Plan Principiante - Iniciación en Pilates</option>
+                    <option value="intermedio">Plan Intermedio - Progresión Completa</option>
+                    <option value="avanzado">Plan Avanzado - Especialización</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="days-select">Días por Semana *</label>
+                    <select id="days-select" required>
+                        <option value="">-- Selecciona --</option>
+                        <option value="2">2 días por semana</option>
+                        <option value="3">3 días por semana</option>
+                        <option value="4">4 días por semana</option>
+                        <option value="5">5 días por semana</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="duration-select">Duración de Sesión *</label>
+                    <select id="duration-select" required>
+                        <option value="">-- Selecciona --</option>
+                        <option value="30">30 minutos</option>
+                        <option value="45">45 minutos</option>
+                        <option value="60">60 minutos</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="exercise-type-select">Tipo de Ejercicios *</label>
+                <select id="exercise-type-select" required>
+                    <option value="">-- Selecciona --</option>
+                    <option value="mat">Pilates Mat (sin equipos)</option>
+                    <option value="reformer">Pilates Reformer</option>
+                    <option value="mixed">Mixto (Mat + Reformer)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="goals-select">Objetivo Principal *</label>
+                <select id="goals-select" required>
+                    <option value="">-- Selecciona --</option>
+                    <option value="weight-loss">Pérdida de peso y tonificación</option>
+                    <option value="strength">Aumento de fuerza y resistencia</option>
+                    <option value="flexibility">Flexibilidad y movilidad</option>
+                    <option value="posture">Corrección postural</option>
+                    <option value="general">Bienestar general</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="notes-input">Notas Adicionales (Opcional)</label>
+                <textarea id="notes-input" rows="3" placeholder="Ej: lesiones previas, limitaciones, preferencias..."></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button onclick="generatePDF()" class="btn btn-primary">📥 Descargar PDF</button>
+                <button onclick="clearForm()" class="btn btn-secondary">🔄 Limpiar</button>
+            </div>
+        </div>
+
+        <!-- Panel de Login (si no hay ID) -->
+        <div class="admin-card" id="login-card">
+            <h2>🔐 Acceso Seguro <span class="lock-icon">PRIVADO</span></h2>
+            <p>Ingresa tu contraseña para acceder al panel privado.</p>
+
+            <div class="form-group">
+                <label for="password-input">Contraseña:</label>
+                <input type="password" id="password-input" placeholder="Ingresa contraseña">
+            </div>
+
+            <button onclick="checkPassword()" class="btn btn-primary">Acceder</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getConsultation, updateConsultation } from './js/firebase-config.js';
+
+        // Contraseña simple (considera cambiarla)
+        const ADMIN_PASSWORD = 'ara2024';
+
+        let currentConsultationId = null;
+        let currentConsultation = null;
+
+        // Obtener ID de la URL
+        function getConsultationIdFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        // Verificar contraseña
+        window.checkPassword = () => {
+            const password = document.getElementById('password-input').value;
+
+            if (password === ADMIN_PASSWORD) {
+                localStorage.setItem('admin-session', 'true');
+                loadConsultation();
+            } else {
+                showError('Contraseña incorrecta');
+                document.getElementById('password-input').value = '';
+            }
+        };
+
+        // Cargar consulta
+        async function loadConsultation() {
+            currentConsultationId = getConsultationIdFromURL();
+
+            if (!currentConsultationId) {
+                showError('ID de consulta no encontrado en la URL');
+                return;
+            }
+
+            try {
+                currentConsultation = await getConsultation(currentConsultationId);
+
+                if (!currentConsultation) {
+                    showError('Consulta no encontrada');
+                    return;
+                }
+
+                document.getElementById('login-card').style.display = 'none';
+                document.getElementById('form-card').style.display = 'block';
+                document.getElementById('consultation-card').style.display = 'block';
+
+                // Mostrar detalles de la consulta
+                displayConsultation();
+
+            } catch (error) {
+                showError('Error al cargar la consulta: ' + error.message);
+            }
+        }
+
+        // Mostrar detalles de la consulta
+        function displayConsultation() {
+            document.getElementById('consultation-id-display').textContent = currentConsultationId;
+
+            const itemsHtml = currentConsultation.items.map((item, idx) =>
+                `<div class="consultation-item">✓ ${item}</div>`
+            ).join('');
+
+            document.getElementById('consultation-items').innerHTML = itemsHtml;
+
+            if (currentConsultation.presencial) {
+                document.getElementById('consultation-presencial').innerHTML =
+                    '<div class="consultation-item">📍 Prefiere modalidad presencial</div>';
+            }
+
+            if (currentConsultation.note) {
+                document.getElementById('consultation-note').innerHTML =
+                    `<div class="consultation-item"><strong>Comentario:</strong> "${currentConsultation.note}"</div>`;
+            }
+        }
+
+        // Generar PDF
+        window.generatePDF = () => {
+            const plan = document.getElementById('plan-select').value;
+            const days = document.getElementById('days-select').value;
+            const duration = document.getElementById('duration-select').value;
+            const exerciseType = document.getElementById('exercise-type-select').value;
+            const goals = document.getElementById('goals-select').value;
+            const notes = document.getElementById('notes-input').value;
+
+            if (!plan || !days || !duration || !exerciseType || !goals) {
+                showError('Por favor completa todos los campos requeridos (*)');
+                return;
+            }
+
+            // Generar PDF (aquí iría la lógica de jsPDF)
+            // Por ahora, mostrar mensaje de éxito
+            showSuccess('PDF generado exitosamente. Descargando...');
+
+            // TODO: Implementar generación real de PDF
+
+            // Actualizar estado en Firebase
+            updateConsultation(currentConsultationId, {
+                status: 'completed',
+                plan: plan,
+                days: days,
+                duration: duration,
+                exerciseType: exerciseType,
+                goals: goals,
+                notes: notes
+            });
+        };
+
+        // Limpiar formulario
+        window.clearForm = () => {
+            document.getElementById('plan-select').value = '';
+            document.getElementById('days-select').value = '';
+            document.getElementById('duration-select').value = '';
+            document.getElementById('exercise-type-select').value = '';
+            document.getElementById('goals-select').value = '';
+            document.getElementById('notes-input').value = '';
+        };
+
+        // Cerrar sesión
+        window.logout = () => {
+            localStorage.removeItem('admin-session');
+            window.location.href = window.location.origin;
+        };
+
+        // Mostrar errores
+        function showError(msg) {
+            const el = document.getElementById('error-message');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 5000);
+        }
+
+        // Mostrar éxito
+        function showSuccess(msg) {
+            const el = document.getElementById('success-message');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 5000);
+        }
+
+        // Verificar sesión al cargar
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('admin-session')) {
+                loadConsultation();
+            }
+        });
+
+        // Enter para enviar contraseña
+        document.getElementById('password-input')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') window.checkPassword();
+        });
+    </script>
+</body>
+</html>

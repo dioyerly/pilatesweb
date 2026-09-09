@@ -1,3 +1,6 @@
+// Import Firebase functions
+import { generateConsultationId, saveConsultation } from './firebase-config.js';
+
 // Catálogo de planes y servicios que se pueden agregar a la consulta
 const CATALOG = {
     'plan-principiante': { nameKey: 'catalog.plan_principiante', typeKey: 'catalog.type_plan', icon: '🌱' },
@@ -137,69 +140,116 @@ function buildSummaryLines() {
         .map(item => `• ${item.icon} ${t(item.nameKey)} (${t(item.typeKey)})`);
 }
 
-function sendWhatsapp() {
+async function sendWhatsapp() {
     if (cartItems.length === 0) {
         alert(t('cart.alert_empty_whatsapp'));
         return;
     }
 
-    // Descripciones detalladas para cada item
-    const itemDescriptions = {
-        'plan-principiante': 'Acceso a clases en vivo personalizadas, guia nutricional basica, soporte por email',
-        'plan-intermedio': 'Clases en vivo 3x/semana, plan nutricional personalizado, consultas 1:1, seguimiento mensual',
-        'plan-avanzado': 'Entrenamiento personalizado, clases ilimitadas, nutricionista dedicada, seguimiento semanal',
-        'servicio-pilates': 'Sesiones en vivo adaptadas a tu nivel, mejora postural y flexibilidad',
-        'servicio-nutricion': 'Planes de alimentacion personalizados, asesoramiento integral',
-        'plan-combinado': 'Pilates + Nutricion integral, seguimiento completo',
-        'clase-prueba': 'Clase introductoria para conocer la metodologia'
-    };
+    // Mostrar loading
+    const btn = cartWhatsappBtn;
+    const originalText = btn.textContent;
+    btn.textContent = 'Generando consulta...';
+    btn.disabled = true;
 
-    const itItemDescriptions = {
-        'plan-principiante': 'Accesso a lezioni dal vivo personalizzate, guida nutrizionale di base, supporto email',
-        'plan-intermedio': 'Lezioni dal vivo 3x/settimana, piano nutrizionale personalizzato, consulenze 1:1, monitoraggio mensile',
-        'plan-avanzado': 'Allenamento personalizzato, lezioni illimitate, nutrizionista dedicata, monitoraggio settimanale',
-        'servicio-pilates': 'Sessioni dal vivo adattate al tuo livello, miglioramento posturale e flessibilita',
-        'servicio-nutricion': 'Piani alimentari personalizzati, consulenza completa',
-        'plan-combinado': 'Pilates + Nutrizione integrale, monitoraggio completo',
-        'clase-prueba': 'Lezione introduttiva per conoscere la metodologia'
-    };
+    try {
+        // Generar ID única para la consulta
+        const consultationId = generateConsultationId();
 
-    const lang = getLang();
-    const descriptions = lang === 'it' ? itItemDescriptions : itemDescriptions;
+        // Descripciones detalladas para cada item
+        const itemDescriptions = {
+            'plan-principiante': 'Acceso a clases en vivo personalizadas, guia nutricional basica, soporte por email',
+            'plan-intermedio': 'Clases en vivo 3x/semana, plan nutricional personalizado, consultas 1:1, seguimiento mensual',
+            'plan-avanzado': 'Entrenamiento personalizado, clases ilimitadas, nutricionista dedicada, seguimiento semanal',
+            'servicio-pilates': 'Sesiones en vivo adaptadas a tu nivel, mejora postural y flexibilidad',
+            'servicio-nutricion': 'Planes de alimentacion personalizados, asesoramiento integral',
+            'plan-combinado': 'Pilates + Nutricion integral, seguimiento completo',
+            'clase-prueba': 'Clase introductoria para conocer la metodologia'
+        };
 
-    // Construir mensaje detallado
-    let message = `${t('cart.whatsapp_greeting')}\n\n`;
-    message += `📋 *MI INTERESA:*\n`;
+        const itItemDescriptions = {
+            'plan-principiante': 'Accesso a lezioni dal vivo personalizzate, guida nutrizionale di base, supporto email',
+            'plan-intermedio': 'Lezioni dal vivo 3x/settimana, piano nutrizionale personalizzato, consulenze 1:1, monitoraggio mensile',
+            'plan-avanzado': 'Allenamento personalizzato, lezioni illimitate, nutrizionista dedicata, monitoraggio settimanale',
+            'servicio-pilates': 'Sessioni dal vivo adattate al tuo livello, miglioramento posturale e flessibilita',
+            'servicio-nutricion': 'Piani alimentari personalizzati, consulenza completa',
+            'plan-combinado': 'Pilates + Nutrizione integrale, monitoraggio completo',
+            'clase-prueba': 'Lezione introduttiva per conoscere la metodologia'
+        };
 
-    // Items con descripciones
-    cartItems.forEach((id, idx) => {
-        const item = CATALOG[id];
-        if (!item) return;
+        const lang = getLang();
+        const descriptions = lang === 'it' ? itItemDescriptions : itemDescriptions;
 
-        const itemName = t(item.nameKey);
-        const itemType = t(item.typeKey);
-        const desc = descriptions[id] || '';
+        // Construir mensaje detallado
+        let message = `${t('cart.whatsapp_greeting')}\n\n`;
+        message += `📋 *MI INTERESA:*\n`;
 
-        message += `\n${idx + 1}. *${itemName}*\n`;
-        message += `   Tipo: ${itemType}\n`;
-        message += `   ${desc}\n`;
-    });
+        // Items con descripciones
+        cartItems.forEach((id, idx) => {
+            const item = CATALOG[id];
+            if (!item) return;
 
-    // Modalidad presencial
-    if (cartPresencial.checked) {
-        message += `\n📍 ${t('cart.whatsapp_presencial_line')}`;
+            const itemName = t(item.nameKey);
+            const itemType = t(item.typeKey);
+            const desc = descriptions[id] || '';
+
+            message += `\n${idx + 1}. *${itemName}*\n`;
+            message += `   Tipo: ${itemType}\n`;
+            message += `   ${desc}\n`;
+        });
+
+        // Modalidad presencial
+        if (cartPresencial.checked) {
+            message += `\n📍 ${t('cart.whatsapp_presencial_line')}`;
+        }
+
+        // Comentarios del cliente
+        const note = cartNote.value.trim();
+        if (note) {
+            message += `\n\n💬 *COMENTARIOS:*\n${note}`;
+        }
+
+        // ID de consulta
+        message += `\n\n🆔 *ID de Consulta: ${consultationId}*`;
+
+        // Link al panel privado
+        const panelLink = `${window.location.origin}/admin-panel.html?id=${consultationId}`;
+        message += `\n📋 Panel de respuesta: ${panelLink}`;
+
+        message += `\n\n${t('cart.whatsapp_closing')}`;
+
+        // Guardar consulta en Firebase
+        await saveConsultation({
+            consultationId: consultationId,
+            items: cartItems,
+            presencial: cartPresencial.checked,
+            note: note,
+            language: lang,
+            panelLink: panelLink
+        });
+
+        // Abrir WhatsApp
+        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+
+        // Limpiar carrito después de enviar
+        setTimeout(() => {
+            cartItems = [];
+            saveCart([]);
+            cartNote.value = '';
+            cartPresencial.checked = false;
+            renderAll();
+            closeDrawer();
+            alert('✅ Consulta enviada. El panel de respuesta se abrirá en una nueva pestaña.');
+        }, 500);
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al enviar la consulta. Intenta de nuevo.');
+    } finally {
+        btn.textContent = originalText;
+        btn.disabled = false;
     }
-
-    // Comentarios del cliente
-    const note = cartNote.value.trim();
-    if (note) {
-        message += `\n\n💬 *COMENTARIOS:*\n${note}`;
-    }
-
-    message += `\n\n${t('cart.whatsapp_closing')}`;
-
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
 }
 
 function downloadPdf() {
