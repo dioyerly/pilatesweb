@@ -640,48 +640,62 @@
             y += 8;
 
             // INTRODUCCIÓN PERSONAL
-            addSection('Tu Transformación Comienza Aquí');
-            const introText = `Este plan ha sido diseñado específicamente para ti según tus objetivos, nivel de experiencia y disponibilidad. No es genérico, es TUYO.`;
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(14);
+            doc.setTextColor(212, 200, 142);
+            doc.text('[★] Tu Transformacion Comienza Aqui', marginX, y);
+            y += 8;
+
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(11);
+            doc.setTextColor(80, 80, 80);
+            const introText = `Este plan ha sido diseñado ESPECIFICAMENTE para ti. No es genérico. Es TUYO. Cada ejercicio, cada día, cada semana ha sido planificado para TUS objetivos y TU disponibilidad.`;
             const introLines = doc.splitTextToSize(introText, 160);
             doc.text(introLines, marginX + 2, y);
-            y += introLines.length * 5 + 5;
+            y += introLines.length * 5 + 8;
 
             // INFORMACIÓN DEL PLAN
-            addSection('Tu Plan de Entrenamiento');
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(13);
+            doc.setTextColor(90, 111, 94);
+            doc.text('[>>] Tu Plan de Entrenamiento', marginX, y);
+            y += 8;
 
-            const planLabel = plan === 'principiante' ? 'Principiante' : plan === 'intermedio' ? 'Intermedio' : 'Avanzado';
+            const planLabel = plan === 'principiante' ? 'PRINCIPIANTE' : plan === 'intermedio' ? 'INTERMEDIO' : 'AVANZADO';
             const planDesc = {
-                'principiante': 'Para quienes comienzan en pilates. Resultados notables en 4-6 semanas.',
-                'intermedio': 'Para quienes tienen experiencia. Transformación visible en 2-4 semanas.',
-                'avanzado': 'Para quienes buscan especialización. Resultados máximos en 1-2 semanas.'
+                'principiante': 'Comienzas en pilates? Perfecto. En 4-6 semanas veras cambios REALES.',
+                'intermedio': 'Ya practicas pilates? Ahora viene la TRANSFORMACION. Visible en 2-4 semanas.',
+                'avanzado': 'Buscas especializacion? Esto es para ti. Resultados MAXIMOS en 1-2 semanas.'
             };
 
-            doc.text(`Plan: ${planLabel}`, marginX + 2, y);
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(11);
+            doc.setTextColor(212, 200, 142);
+            doc.text(`PLAN ${planLabel}`, marginX + 2, y);
             y += 5;
+
             doc.setFont(undefined, 'normal');
             doc.setFontSize(9);
             doc.setTextColor(110, 110, 110);
             doc.text(planDesc[plan], marginX + 4, y);
-            y += 5;
+            y += 6;
 
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
             doc.setTextColor(80, 80, 80);
-            doc.text(`Frecuencia: ${days} días por semana (óptimo para resultados consistentes)`, marginX + 2, y);
-            y += 5;
-            doc.text(`Duración: ${duration} minutos por sesión (perfecto para tu rutina)`, marginX + 2, y);
+            doc.text(`► ${days} dias/semana  |  ${duration} minutos/sesion`, marginX + 2, y);
             y += 5;
 
-            const exerciseLabel = exerciseType === 'mat' ? 'Pilates Mat' : exerciseType === 'reformer' ? 'Pilates Reformer' : 'Mixto';
-            doc.text(`Tipo de ejercicios: ${exerciseLabel}`, marginX + 2, y);
+            const exerciseLabel = exerciseType === 'mat' ? 'Pilates Mat (sin equipos)' : exerciseType === 'reformer' ? 'Pilates Reformer' : 'Mixto (Mat + Reformer)';
+            doc.text(`► Tipo: ${exerciseLabel}`, marginX + 2, y);
             y += 5;
 
             const goalsLabel = OBJETIVOS_INFO[goals]?.titulo || goals;
-            doc.text(`Tu objetivo: ${goalsLabel}`, marginX + 2, y);
+            doc.text(`► Tu objetivo: ${goalsLabel}`, marginX + 2, y);
             y += 5;
 
             if (weight || height) {
-                doc.text(`Datos físicos: ${weight}kg - ${height}cm`, marginX + 2, y);
+                doc.text(`► Datos: ${weight}kg, ${height}cm`, marginX + 2, y);
                 y += 5;
             }
             y += 5;
@@ -709,61 +723,106 @@
             const discountAmount = subtotal * (discountPercent / 100);
             const total = subtotal - discountAmount;
 
-            addSection('Tu Inversión en Transformación');
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(13);
+            doc.setTextColor(90, 111, 94);
+            doc.text('[*] Tu Inversion en Transformacion', marginX, y);
+            y += 8;
 
-            doc.text(`Tarifa por sesión: $${(hourlyRate * durationInHours).toFixed(2)}`, marginX + 2, y);
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(80, 80, 80);
+            doc.text(`► Tarifa por sesion: $${(hourlyRate * durationInHours).toFixed(2)}`, marginX + 2, y);
             y += 5;
-            doc.text(`Sesiones al mes: ${sessionsPerMonth} (${daysNum} días × 4.3 semanas)`, marginX + 2, y);
+            doc.text(`► Sesiones/mes: ${sessionsPerMonth}`, marginX + 2, y);
             y += 5;
-            doc.text(`Subtotal mensual: $${subtotal.toFixed(2)}`, marginX + 2, y);
-            y += 5;
+
+            doc.setTextColor(110, 110, 110);
+            doc.setFontSize(9);
+            doc.text(`Calculo: ${daysNum} dias × 4.3 semanas = ${sessionsPerMonth} sesiones`, marginX + 4, y);
+            y += 4;
+
+            doc.setFontSize(10);
+            doc.setTextColor(80, 80, 80);
+            doc.text(`► Subtotal: $${subtotal.toFixed(2)}`, marginX + 2, y);
+            y += 6;
 
             if (discountPercent > 0) {
                 doc.setTextColor(220, 53, 69);
-                doc.text(`Descuento especial (${discountPercent}%): -$${discountAmount.toFixed(2)}`, marginX + 2, y);
-                y += 5;
-                doc.setTextColor(80, 80, 80);
+                doc.setFont(undefined, 'bold');
+                doc.text(`✓ DESCUENTO ESPECIAL (${discountPercent}%): -$${discountAmount.toFixed(2)}`, marginX + 2, y);
+                y += 6;
             }
+
+            // Línea decorativa simple
+            doc.setDrawColor(212, 200, 142);
+            doc.setLineWidth(1);
+            doc.line(marginX + 2, y, marginR - 2, y);
+            y += 6;
 
             doc.setFont(undefined, 'bold');
             doc.setFontSize(12);
-            doc.setTextColor(90, 111, 94);
-            doc.text(`═══════════════════════════════`, marginX + 2, y);
-            y += 5;
             doc.setTextColor(212, 200, 142);
             doc.text(`TOTAL MENSUAL: $${total.toFixed(2)}`, marginX + 2, y);
             y += 8;
             doc.setTextColor(80, 80, 80);
 
             // RESULTADOS QUE VAS A VER
-            addSection('Los Resultados que Verás');
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(13);
+            doc.setTextColor(90, 111, 94);
+            doc.text('[!] Lo Que VERAS (No Promesas, RESULTADOS)', marginX, y);
+            y += 8;
 
             const resultsByWeek = {
-                'principiante': ['Semana 1-2: Conexión cuerpo-mente mejorada', 'Semana 3-4: Postura notablemente mejor', 'Mes 2: Brazos y core más definidos'],
-                'intermedio': ['Semana 1-2: Muscular se activa intensamente', 'Semana 3-4: Brazos y glúteos visiblemente tonificados', 'Mes 2: Transformación física evidente'],
-                'avanzado': ['Semana 1: Cuerpo se redefine rápidamente', 'Semana 2: Cambios drásticos visibles', 'Mes 1: Transformación casi completa']
+                'principiante': [
+                    'Semana 1-2: SIENTES la conexion cuerpo-mente. Postura cambio.',
+                    'Semana 3-4: VES los cambios. Ropa te queda diferente.',
+                    'Mes 2: Brazos Y core VISIBLEMENTE mas definidos.'
+                ],
+                'intermedio': [
+                    'Semana 1-2: MUSCULOS activados intensamente. MAS energia.',
+                    'Semana 3-4: Brazos Y gluteos TONIFICADOS. Espejo muestra cambios.',
+                    'Mes 2: TRANSFORMACION fisica EVIDENTE. Familia lo nota.'
+                ],
+                'avanzado': [
+                    'Semana 1: Cuerpo REDEFINIENDOSE rapidamente. Resultados CLAROS.',
+                    'Semana 2: Cambios DRASTICOS visibles. Confianza por las NUBES.',
+                    'Mes 1: TRANSFORMACION casi COMPLETA. Te reconoces en el espejo.'
+                ]
             };
 
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(80, 80, 80);
             (resultsByWeek[plan] || resultsByWeek['principiante']).forEach(r => {
-                doc.text(`• ${r}`, marginX + 4, y);
-                y += 5;
+                doc.text(`► ${r}`, marginX + 2, y);
+                y += 6;
             });
-            y += 5;
+            y += 3;
 
             // BENEFICIOS CLAVE
-            addSection('Lo Que Incluye Tu Plan');
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(13);
+            doc.setTextColor(90, 111, 94);
+            doc.text('[o] Esto INCLUYE Tu Plan', marginX, y);
+            y += 8;
+
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(80, 80, 80);
             const benefits = [
-                `${sessionsPerMonth} sesiones de pilates en vivo al mes`,
-                'Acceso a biblioteca de ejercicios 24/7 (puedes practicar después)',
-                'Plan personalizado según tu objetivo específico',
-                'Seguimiento mensual de progreso',
-                'Soporte vía email para preguntas'
+                `${sessionsPerMonth} SESIONES DE PILATES EN VIVO (grabadas si las pierdes)`,
+                'Acceso TOTAL a biblioteca de ejercicios 24/7',
+                'PLAN PERSONALIZADO segun TU objetivo',
+                'Seguimiento MENSUAL de tu progreso',
+                'Soporte VIA EMAIL + WhatsApp para dudas'
             ];
             benefits.forEach(b => {
-                doc.text(`• ${b}`, marginX + 4, y);
-                y += 5;
+                doc.text(`★ ${b}`, marginX + 2, y);
+                y += 6;
             });
-            y += 5;
+            y += 3;
 
             // NOTAS ESPECIALES SI LAS HAY
             if (notes) {
@@ -779,28 +838,37 @@
                 y = 20;
             }
 
-            addSection('Próximos Pasos');
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(13);
+            doc.setTextColor(212, 200, 142);
+            doc.text('[>>] TUS PROXIMOS PASOS', marginX, y);
+            y += 8;
+
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
             doc.setTextColor(80, 80, 80);
-            doc.text('1. Confirma tu horario elegido', marginX + 2, y);
+            doc.text('1. Confirma tu HORARIO elegido (mañana, tarde, noche)', marginX + 2, y);
             y += 5;
-            doc.text('2. Realiza el pago del primer mes', marginX + 2, y);
+            doc.text('2. Realiza el PAGO del primer mes ($' + total.toFixed(2) + ')', marginX + 2, y);
             y += 5;
-            doc.text('3. Recibe instrucciones de acceso', marginX + 2, y);
+            doc.text('3. Recibe INSTRUCCIONES de acceso + link a plataforma', marginX + 2, y);
             y += 5;
-            doc.text('4. Comienza tu transformación en tu próxima semana disponible', marginX + 2, y);
-            y += 8;
+            doc.text('4. COMIENZA tu transformacion en tu proxima semana disponible', marginX + 2, y);
+            y += 10;
 
             doc.setFont(undefined, 'bold');
-            doc.setFontSize(11);
+            doc.setFontSize(12);
             doc.setTextColor(90, 111, 94);
-            doc.text('¿Preguntas? Contáctame sin compromiso.', marginX, y);
-            y += 5;
+            doc.text('¿PREGUNTAS? Contactame SIN COMPROMISO.', marginX, y);
+            y += 6;
+
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
+            doc.setTextColor(212, 200, 142);
+            doc.text('WhatsApp: +39 3891131525', marginX, y);
+            y += 4;
             doc.setTextColor(130, 130, 130);
-            doc.text('WhatsApp: +39 3891131525 | Email: ara@trainer.com', marginX, y);
+            doc.text('Email: ara@trainer.com', marginX, y);
 
             // FOOTER DECORATIVO
             doc.setDrawColor(212, 200, 142);
