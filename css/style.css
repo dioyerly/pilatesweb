@@ -5,9 +5,9 @@
 }
 
 :root {
-    --primary: #16a34a;
-    --primary-dark: #15803d;
-    --light-bg: #f0fdf4;
+    --primary: #d4c88e;
+    --primary-dark: #b8ad7a;
+    --light-bg: #f9f6f0;
     --text-dark: #1f2937;
     --text-gray: #6b7280;
     --border: #e5e7eb;
@@ -226,7 +226,7 @@ h1 {
 .divider {
     width: 100px;
     height: 4px;
-    background: linear-gradient(90deg, var(--primary), #14b8a6);
+    background: linear-gradient(90deg, var(--primary), #c9b880);
     margin: 40px auto;
     border-radius: 2px;
 }
@@ -689,7 +689,7 @@ section h2 {
 
 /* CONTACTO */
 #contacto {
-    background: linear-gradient(135deg, var(--primary) 0%, #14b8a6 100%);
+    background: linear-gradient(135deg, #5a6f5e 0%, #4a5f50 100%);
     color: white;
 }
 
@@ -1196,7 +1196,7 @@ a.logo {
 
 /* CTA FINAL */
 .cta-final {
-    background: linear-gradient(135deg, var(--primary) 0%, #14b8a6 100%);
+    background: linear-gradient(135deg, #5a6f5e 0%, #4a5f50 100%);
     color: white;
     text-align: center;
 }
