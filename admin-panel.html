@@ -224,6 +224,36 @@
                 <textarea id="notes-input" rows="3" placeholder="Ej: lesiones previas, limitaciones, preferencias..."></textarea>
             </div>
 
+            <!-- Días Disponibles -->
+            <div style="background: #f9f6f0; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #d4c88e;">
+                <h3 style="margin-top: 0; color: var(--primary);">📅 Tus Días Disponibles</h3>
+                <p style="font-size: 13px; color: #666; margin: 0 0 15px 0;">Selecciona los días que estás disponible para dar clases</p>
+
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;">
+                    <label style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                        <input type="checkbox" id="day-lunes" value="Lunes"> Lunes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                        <input type="checkbox" id="day-martes" value="Martes"> Martes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                        <input type="checkbox" id="day-miercoles" value="Miércoles"> Miércoles
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                        <input type="checkbox" id="day-jueves" value="Jueves"> Jueves
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                        <input type="checkbox" id="day-viernes" value="Viernes"> Viernes
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                        <input type="checkbox" id="day-sabado" value="Sábado"> Sábado
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                        <input type="checkbox" id="day-domingo" value="Domingo"> Domingo
+                    </label>
+                </div>
+            </div>
+
             <!-- Sección de Cotización -->
             <div style="background: #f9f6f0; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #d4c88e;">
                 <h3 style="margin-top: 0; color: var(--primary);">💰 Cotización</h3>
@@ -550,18 +580,30 @@
                 return;
             }
 
+            // Detectar si hay Asesoría Nutricional en los items
+            const hasNutrition = currentConsultation && currentConsultation.items &&
+                                currentConsultation.items.some(item => item.includes('servicio-nutricion') || item.includes('plan-combinado'));
+            const nutritionPrice = hasNutrition ? 60 : 0;
+
             // Cálculo: sesiones/mes (aproximado 4 semanas)
             const sessionsPerMonth = days * 4;
             const durationInHours = duration / 60;
             const hoursPerMonth = sessionsPerMonth * durationInHours;
-            const subtotal = hoursPerMonth * hourlyRate;
+            const pilatesSubtotal = hoursPerMonth * hourlyRate;
+            const subtotal = pilatesSubtotal + nutritionPrice;
             const discountAmount = subtotal * (discountPercent / 100);
             const total = subtotal - discountAmount;
 
             // Mostrar cotización
             document.getElementById('sessions-per-month').textContent = sessionsPerMonth;
             document.getElementById('hours-per-month').textContent = hoursPerMonth.toFixed(1);
-            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+
+            // Mostrar desglose si hay nutrición
+            let subtotalText = `$${subtotal.toFixed(2)}`;
+            if (hasNutrition) {
+                subtotalText = `$${pilatesSubtotal.toFixed(2)} (pilates) + $${nutritionPrice} (nutricion)`;
+            }
+            document.getElementById('subtotal').textContent = subtotalText;
             document.getElementById('total-amount').textContent = `$${total.toFixed(2)}`;
 
             if (discountPercent > 0) {
@@ -711,6 +753,23 @@
             });
             y += 5;
 
+            // HORARIOS DISPONIBLES DEL DUEÑO
+            const selectedDays = [];
+            ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'].forEach(day => {
+                const checkbox = document.getElementById(`day-${day}`);
+                if (checkbox && checkbox.checked) {
+                    selectedDays.push(checkbox.value);
+                }
+            });
+
+            if (selectedDays.length > 0) {
+                doc.setFont(undefined, 'bold');
+                doc.setFontSize(11);
+                doc.setTextColor(90, 111, 94);
+                doc.text('DISPONIBILIDAD: ' + selectedDays.join(', '), marginX, y);
+                y += 7;
+            }
+
             // COTIZACIÓN PROFESIONAL
             const hourlyRate = parseFloat(document.getElementById('hourly-rate').value) || 50;
             const discountPercent = parseFloat(document.getElementById('discount-percent').value) || 0;
@@ -719,7 +778,13 @@
             const sessionsPerMonth = daysNum * 4;
             const durationInHours = durationNum / 60;
             const hoursPerMonth = sessionsPerMonth * durationInHours;
-            const subtotal = hoursPerMonth * hourlyRate;
+            const pilatesSubtotal = hoursPerMonth * hourlyRate;
+
+            // Detectar si hay nutrición
+            const hasNutrition = currentConsultation && currentConsultation.items &&
+                                currentConsultation.items.some(item => item.includes('servicio-nutricion') || item.includes('plan-combinado'));
+            const nutritionPrice = hasNutrition ? 60 : 0;
+            const subtotal = pilatesSubtotal + nutritionPrice;
             const discountAmount = subtotal * (discountPercent / 100);
             const total = subtotal - discountAmount;
 
@@ -732,25 +797,23 @@
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
             doc.setTextColor(80, 80, 80);
-            doc.text(`► Tarifa por sesion: $${(hourlyRate * durationInHours).toFixed(2)}`, marginX + 2, y);
-            y += 5;
-            doc.text(`► Sesiones/mes: ${sessionsPerMonth}`, marginX + 2, y);
+            doc.text(`► Sesiones PILATES: ${sessionsPerMonth} × $${(hourlyRate * durationInHours).toFixed(2)} = $${pilatesSubtotal.toFixed(2)}/mes`, marginX + 2, y);
             y += 5;
 
-            doc.setTextColor(110, 110, 110);
-            doc.setFontSize(9);
-            doc.text(`Calculo: ${daysNum} dias × 4.3 semanas = ${sessionsPerMonth} sesiones`, marginX + 4, y);
-            y += 4;
+            if (hasNutrition) {
+                doc.text(`► ASESORIA NUTRICIONAL: $${nutritionPrice}/mes`, marginX + 2, y);
+                y += 5;
+            }
 
+            doc.setFont(undefined, 'bold');
             doc.setFontSize(10);
-            doc.setTextColor(80, 80, 80);
-            doc.text(`► Subtotal: $${subtotal.toFixed(2)}`, marginX + 2, y);
+            doc.setTextColor(110, 110, 110);
+            doc.text(`Subtotal: $${subtotal.toFixed(2)}`, marginX + 2, y);
             y += 6;
 
             if (discountPercent > 0) {
                 doc.setTextColor(220, 53, 69);
-                doc.setFont(undefined, 'bold');
-                doc.text(`✓ DESCUENTO ESPECIAL (${discountPercent}%): -$${discountAmount.toFixed(2)}`, marginX + 2, y);
+                doc.text(`DESCUENTO (${discountPercent}%): -$${discountAmount.toFixed(2)}`, marginX + 2, y);
                 y += 6;
             }
 
@@ -885,6 +948,15 @@
 
             showSuccess('✅ PDF generado y descargado exitosamente');
 
+            // Obtener días disponibles
+            const availableDays = [];
+            ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'].forEach(day => {
+                const checkbox = document.getElementById(`day-${day}`);
+                if (checkbox && checkbox.checked) {
+                    availableDays.push(checkbox.value);
+                }
+            });
+
             // Actualizar estado en Firebase
             updateConsultation(currentConsultationId, {
                 status: 'completed',
@@ -899,6 +971,8 @@
                 discount: discountPercent,
                 hourlyRate: hourlyRate,
                 totalPrice: total,
+                availableDays: availableDays,
+                hasNutrition: hasNutrition,
                 pdfGenerated: true
             });
         };
