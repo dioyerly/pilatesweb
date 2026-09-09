@@ -1,0 +1,96 @@
+<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: 'Arial', sans-serif; font-size: 72px; font-weight: bold; fill: #5a6f5e; }
+      .circle { fill: #5a6f5e; }
+      .icon { fill: #d4c88e; stroke: #d4c88e; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <!-- Título -->
+  <text x="600" y="80" class="title" text-anchor="middle">ARA TRAINER</text>
+
+  <!-- Línea decorativa bajo el título -->
+  <line x1="350" y1="100" x2="850" y2="100" stroke="#d4c88e" stroke-width="3"/>
+
+  <!-- ICONO 1: PILATES (persona en posición de pilates) -->
+  <circle cx="150" cy="200" r="65" class="circle"/>
+  <g transform="translate(150, 200)">
+    <!-- Cabeza -->
+    <circle cx="0" cy="-25" r="8" class="icon"/>
+    <!-- Torso -->
+    <rect x="-6" y="-15" width="12" height="18" rx="2" class="icon"/>
+    <!-- Brazo izquierdo extendido -->
+    <line x1="-6" y1="-10" x2="-25" y2="-20" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+    <!-- Brazo derecho extendido -->
+    <line x1="6" y1="-10" x2="25" y2="-20" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pierna izquierda estirada -->
+    <line x1="-4" y1="3" x2="-20" y2="25" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pierna derecha estirada -->
+    <line x1="4" y1="3" x2="20" y2="25" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- ICONO 2: MEDITACIÓN (persona en loto) -->
+  <circle cx="350" cy="200" r="65" class="circle"/>
+  <g transform="translate(350, 200)">
+    <!-- Cabeza -->
+    <circle cx="0" cy="-22" r="8" class="icon"/>
+    <!-- Cuerpo sentado -->
+    <ellipse cx="0" cy="5" rx="10" ry="12" class="icon"/>
+    <!-- Pierna izquierda -->
+    <path d="M -10 10 Q -18 15 -16 25" fill="none" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pierna derecha -->
+    <path d="M 10 10 Q 18 15 16 25" fill="none" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+    <!-- Manos en posición zen -->
+    <circle cx="-6" cy="8" r="3" class="icon"/>
+    <circle cx="6" cy="8" r="3" class="icon"/>
+  </g>
+
+  <!-- ICONO 3: NUTRICIÓN (botella + manzana) -->
+  <circle cx="550" cy="200" r="65" class="circle"/>
+  <g transform="translate(550, 200)">
+    <!-- Botella -->
+    <rect x="-8" y="-12" width="10" height="28" rx="2" fill="none" stroke="#d4c88e" stroke-width="2.5"/>
+    <rect x="-6" y="-16" width="6" height="4" rx="1" class="icon"/>
+    <!-- Agua dentro -->
+    <rect x="-6" y="2" width="8" height="12" fill="#d4c88e" opacity="0.6" rx="1"/>
+    <!-- Manzana -->
+    <circle cx="15" cy="-5" r="10" fill="none" stroke="#d4c88e" stroke-width="2.5"/>
+    <path d="M 15 -15 L 18 -12 L 17 -8" fill="none" stroke="#d4c88e" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="17" cy="-12" r="1.5" class="icon"/>
+  </g>
+
+  <!-- ICONO 4: FLEXIBILIDAD (persona estirándose hacia adelante) -->
+  <circle cx="750" cy="200" r="65" class="circle"/>
+  <g transform="translate(750, 200)">
+    <!-- Cabeza -->
+    <circle cx="0" cy="-20" r="7" class="icon"/>
+    <!-- Brazo extendido hacia adelante -->
+    <line x1="0" y1="-12" x2="22" y2="15" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+    <!-- Otro brazo -->
+    <line x1="0" y1="-12" x2="-10" y2="10" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+    <!-- Cuerpo inclinado -->
+    <path d="M 0 -13 Q 5 0 10 20" fill="none" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pierna -->
+    <line x1="0" y1="20" x2="0" y2="28" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- ICONO 5: EQUILIBRIO (persona en bola de balance) -->
+  <circle cx="950" cy="200" r="65" class="circle"/>
+  <g transform="translate(950, 200)">
+    <!-- Cabeza -->
+    <circle cx="0" cy="-18" r="7" class="icon"/>
+    <!-- Cuerpo -->
+    <ellipse cx="0" cy="-5" rx="8" ry="10" class="icon"/>
+    <!-- Brazos extendidos -->
+    <line x1="-8" y1="-8" x2="-18" y2="-15" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+    <line x1="8" y1="-8" x2="18" y2="-15" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+    <!-- Piernas -->
+    <line x1="-4" y1="5" x2="-8" y2="18" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+    <line x1="4" y1="5" x2="8" y2="18" stroke="#d4c88e" stroke-width="3" stroke-linecap="round"/>
+    <!-- Bola de balance -->
+    <circle cx="0" cy="28" r="18" fill="none" stroke="#d4c88e" stroke-width="2.5"/>
+    <!-- Línea del horizonte en bola -->
+    <path d="M -14 28 Q 0 35 14 28" fill="none" stroke="#d4c88e" stroke-width="1.5" opacity="0.7"/>
+  </g>
+</svg>
