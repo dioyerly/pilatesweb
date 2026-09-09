@@ -456,7 +456,7 @@ function generatePersonalizedPlanPDF(planPrincipal, planDias, planDuracion, plan
     y += 5;
     doc.text('WhatsApp: +39 389 1131525', marginX, y);
     y += 4;
-    doc.text('Email: aranircamarl@gmail.com', marginX, y);
+    doc.text('Email: aranircamar1@gmail.com', marginX, y);
 
     const filename = lang === 'it' ? 'ara-trainer-piano-personalizzato.pdf' : 'ara-trainer-plan-personalizado.pdf';
     doc.save(filename);
@@ -642,7 +642,7 @@ function downloadPdf() {
     y += 5;
     doc.text('WhatsApp: +39 389 1131525', marginX, y);
     y += 4;
-    doc.text('Email: aranircamarl@gmail.com', marginX, y);
+    doc.text('Email: aranircamar1@gmail.com', marginX, y);
     y += 4;
     doc.text('Website: www.ara-trainer.com', marginX, y);
 
