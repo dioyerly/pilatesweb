@@ -140,11 +140,13 @@ window.refreshCartUI = renderAll;
 function openDrawer() {
     cartOverlay.classList.add('active');
     cartDrawer.classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 function closeDrawer() {
     cartOverlay.classList.remove('active');
     cartDrawer.classList.remove('active');
+    document.body.style.overflow = '';
 }
 
 function buildSummaryLines() {

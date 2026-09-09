@@ -847,7 +847,7 @@ footer p {
     right: 0;
     width: 380px;
     max-width: 100%;
-    height: 100%;
+    height: 100vh;
     background: white;
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
     transform: translateX(100%);
@@ -856,6 +856,8 @@ footer p {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .cart-drawer.active {
