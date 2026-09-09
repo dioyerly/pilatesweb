@@ -497,10 +497,93 @@ document.querySelectorAll('.btn-add-cart').forEach(btn => {
     btn.addEventListener('click', () => toggleItem(btn.dataset.itemId));
 });
 
+function handleCartSubmit() {
+    const formContent = document.getElementById('cart-form-content');
+    const isFormFilled = formContent && formContent.style.display !== 'none' &&
+        document.getElementById('plan-dias').value &&
+        document.getElementById('plan-duracion').value &&
+        document.getElementById('plan-ejercicios').value &&
+        document.getElementById('plan-objetivo').value &&
+        document.getElementById('plan-peso').value &&
+        document.getElementById('plan-altura').value;
+
+    if (isFormFilled) {
+        submitPlanForm();
+    } else {
+        sendSimpleCartWhatsapp();
+    }
+}
+
+async function sendSimpleCartWhatsapp() {
+    if (cartItems.length === 0) {
+        alert(t('cart.empty_line1'));
+        return;
+    }
+
+    const btn = cartWhatsappBtn;
+    const originalText = btn.textContent;
+    btn.textContent = t('cart.sending') || 'Enviando...';
+    btn.disabled = true;
+
+    try {
+        const consultationId = generateConsultationId();
+        const lang = getLang();
+
+        let message = `${t('cart.whatsapp_greeting')}\n\n`;
+        message += `📋 *${t('cart.title')}:*\n`;
+
+        buildSummaryLines().forEach(line => {
+            message += line + '\n';
+        });
+
+        if (cartPresencial.checked) {
+            message += `\n📍 ${t('cart.whatsapp_presencial_line')}`;
+        }
+
+        const note = cartNote.value.trim();
+        if (note) {
+            message += `\n\n💬 *${t('cart.comments') || 'COMENTARIOS'}:*\n${note}`;
+        }
+
+        message += `\n\n🆔 *ID: ${consultationId}*`;
+        const panelLink = `${window.location.origin}/admin-panel.html?id=${consultationId}`;
+        message += `\n📋 Panel: ${panelLink}`;
+        message += `\n\n${t('cart.whatsapp_closing')}`;
+
+        await saveConsultation({
+            consultationId,
+            items: cartItems,
+            presencial: cartPresencial.checked,
+            note: note,
+            language: lang,
+            panelLink: panelLink
+        });
+
+        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+
+        setTimeout(() => {
+            cartItems = [];
+            saveCart([]);
+            cartNote.value = '';
+            cartPresencial.checked = false;
+            renderAll();
+            closeDrawer();
+        }, 1000);
+
+    } catch (error) {
+        console.error('Error sending consultation:', error);
+        alert('Error al enviar. Intenta de nuevo.');
+    } finally {
+        btn.textContent = originalText;
+        btn.disabled = false;
+    }
+}
+
 cartFab.addEventListener('click', openDrawer);
 cartCloseBtn.addEventListener('click', closeDrawer);
 cartOverlay.addEventListener('click', closeDrawer);
-cartWhatsappBtn.addEventListener('click', submitPlanForm);
+cartWhatsappBtn.addEventListener('click', handleCartSubmit);
 
 const openCartFinalBtn = document.getElementById('open-cart-final');
 if (openCartFinalBtn) {
