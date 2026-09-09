@@ -1,5 +1,17 @@
-// Import Firebase functions
-import { generateConsultationId, saveConsultation } from './firebase-config.js';
+// Firebase functions (optional for now)
+let generateConsultationId = () => 'CONS-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+let saveConsultation = async () => { /* Firebase akan cargar después */ };
+
+// Cargar Firebase cuando esté listo
+(async () => {
+    try {
+        const firebase = await import('./firebase-config.js');
+        generateConsultationId = firebase.generateConsultationId;
+        saveConsultation = firebase.saveConsultation;
+    } catch (e) {
+        console.log('Firebase no disponible, el carrito funcionará offline');
+    }
+})();
 
 // Catálogo de planes y servicios que se pueden agregar a la consulta
 const CATALOG = {
