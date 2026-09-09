@@ -685,13 +685,13 @@
             doc.setFont(undefined, 'bold');
             doc.setFontSize(14);
             doc.setTextColor(212, 200, 142);
-            doc.text('[★] Tu Transformacion Comienza Aqui', marginX, y);
+            doc.text('Tu Transformación Comienza Aquí', marginX, y);
             y += 8;
 
             doc.setFont(undefined, 'normal');
             doc.setFontSize(11);
             doc.setTextColor(80, 80, 80);
-            const introText = `Este plan ha sido diseñado ESPECIFICAMENTE para ti. No es genérico. Es TUYO. Cada ejercicio, cada día, cada semana ha sido planificado para TUS objetivos y TU disponibilidad.`;
+            const introText = `Este plan ha sido diseñado específicamente para ti. No es genérico. Es tuyo. Cada ejercicio, cada día, cada semana ha sido planificado para tus objetivos y tu disponibilidad.`;
             const introLines = doc.splitTextToSize(introText, 160);
             doc.text(introLines, marginX + 2, y);
             y += introLines.length * 5 + 8;
@@ -700,7 +700,7 @@
             doc.setFont(undefined, 'bold');
             doc.setFontSize(13);
             doc.setTextColor(90, 111, 94);
-            doc.text('[>>] Tu Plan de Entrenamiento', marginX, y);
+            doc.text('Tu Plan de Entrenamiento', marginX, y);
             y += 8;
 
             const planLabel = plan === 'principiante' ? 'PRINCIPIANTE' : plan === 'intermedio' ? 'INTERMEDIO' : 'AVANZADO';
@@ -725,19 +725,19 @@
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
             doc.setTextColor(80, 80, 80);
-            doc.text(`► ${days} dias/semana  |  ${duration} minutos/sesion`, marginX + 2, y);
+            doc.text(`• ${days} días/semana  |  ${duration} minutos/sesión`, marginX + 2, y);
             y += 5;
 
             const exerciseLabel = exerciseType === 'mat' ? 'Pilates Mat (sin equipos)' : exerciseType === 'reformer' ? 'Pilates Reformer' : 'Mixto (Mat + Reformer)';
-            doc.text(`► Tipo: ${exerciseLabel}`, marginX + 2, y);
+            doc.text(`• Tipo: ${exerciseLabel}`, marginX + 2, y);
             y += 5;
 
             const goalsLabel = OBJETIVOS_INFO[goals]?.titulo || goals;
-            doc.text(`► Tu objetivo: ${goalsLabel}`, marginX + 2, y);
+            doc.text(`• Objetivo: ${goalsLabel}`, marginX + 2, y);
             y += 5;
 
             if (weight || height) {
-                doc.text(`► Datos: ${weight}kg, ${height}cm`, marginX + 2, y);
+                doc.text(`• Datos: ${weight} kg, ${height} cm`, marginX + 2, y);
                 y += 5;
             }
             y += 5;
@@ -791,17 +791,17 @@
             doc.setFont(undefined, 'bold');
             doc.setFontSize(13);
             doc.setTextColor(90, 111, 94);
-            doc.text('[*] Tu Inversion en Transformacion', marginX, y);
+            doc.text('Tu Inversión en Transformación', marginX, y);
             y += 8;
 
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
             doc.setTextColor(80, 80, 80);
-            doc.text(`► Sesiones PILATES: ${sessionsPerMonth} × $${(hourlyRate * durationInHours).toFixed(2)} = $${pilatesSubtotal.toFixed(2)}/mes`, marginX + 2, y);
+            doc.text(`• Sesiones Pilates: ${sessionsPerMonth} × $${(hourlyRate * durationInHours).toFixed(2)} = $${pilatesSubtotal.toFixed(2)}/mes`, marginX + 2, y);
             y += 5;
 
             if (hasNutrition) {
-                doc.text(`► ASESORIA NUTRICIONAL: $${nutritionPrice}/mes`, marginX + 2, y);
+                doc.text(`• Asesoría Nutricional: $${nutritionPrice}/mes`, marginX + 2, y);
                 y += 5;
             }
 
@@ -834,24 +834,24 @@
             doc.setFont(undefined, 'bold');
             doc.setFontSize(13);
             doc.setTextColor(90, 111, 94);
-            doc.text('[!] Lo Que VERAS (No Promesas, RESULTADOS)', marginX, y);
+            doc.text('Lo que Verás (Resultados Reales)', marginX, y);
             y += 8;
 
             const resultsByWeek = {
                 'principiante': [
-                    'Semana 1-2: SIENTES la conexion cuerpo-mente. Postura cambio.',
-                    'Semana 3-4: VES los cambios. Ropa te queda diferente.',
-                    'Mes 2: Brazos Y core VISIBLEMENTE mas definidos.'
+                    'Semana 1-2: Sientes la conexión cuerpo-mente. Postura mejora.',
+                    'Semana 3-4: Ves los cambios. Ropa te queda diferente.',
+                    'Mes 2: Brazos y core más definidos.'
                 ],
                 'intermedio': [
-                    'Semana 1-2: MUSCULOS activados intensamente. MAS energia.',
-                    'Semana 3-4: Brazos Y gluteos TONIFICADOS. Espejo muestra cambios.',
-                    'Mes 2: TRANSFORMACION fisica EVIDENTE. Familia lo nota.'
+                    'Semana 1-2: Músculos activados. Más energía.',
+                    'Semana 3-4: Brazos y glúteos tonificados. Cambios visibles.',
+                    'Mes 2: Transformación física evidente.'
                 ],
                 'avanzado': [
-                    'Semana 1: Cuerpo REDEFINIENDOSE rapidamente. Resultados CLAROS.',
-                    'Semana 2: Cambios DRASTICOS visibles. Confianza por las NUBES.',
-                    'Mes 1: TRANSFORMACION casi COMPLETA. Te reconoces en el espejo.'
+                    'Semana 1: Cuerpo redefiniendo rápidamente. Resultados claros.',
+                    'Semana 2: Cambios visibles. Confianza aumenta.',
+                    'Mes 1: Transformación casi completa.'
                 ]
             };
 
@@ -859,7 +859,7 @@
             doc.setFontSize(10);
             doc.setTextColor(80, 80, 80);
             (resultsByWeek[plan] || resultsByWeek['principiante']).forEach(r => {
-                doc.text(`► ${r}`, marginX + 2, y);
+                doc.text(`• ${r}`, marginX + 2, y);
                 y += 6;
             });
             y += 3;
@@ -868,21 +868,21 @@
             doc.setFont(undefined, 'bold');
             doc.setFontSize(13);
             doc.setTextColor(90, 111, 94);
-            doc.text('[o] Esto INCLUYE Tu Plan', marginX, y);
+            doc.text('Esto Incluye Tu Plan', marginX, y);
             y += 8;
 
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
             doc.setTextColor(80, 80, 80);
             const benefits = [
-                `${sessionsPerMonth} SESIONES DE PILATES EN VIVO (grabadas si las pierdes)`,
-                'Acceso TOTAL a biblioteca de ejercicios 24/7',
-                'PLAN PERSONALIZADO segun TU objetivo',
-                'Seguimiento MENSUAL de tu progreso',
-                'Soporte VIA EMAIL + WhatsApp para dudas'
+                `${sessionsPerMonth} sesiones de pilates en vivo`,
+                'Acceso a biblioteca de ejercicios 24/7',
+                'Plan personalizado según tu objetivo',
+                'Seguimiento mensual de tu progreso',
+                'Soporte vía email y WhatsApp'
             ];
             benefits.forEach(b => {
-                doc.text(`★ ${b}`, marginX + 2, y);
+                doc.text(`✓ ${b}`, marginX + 2, y);
                 y += 6;
             });
             y += 3;
@@ -904,15 +904,15 @@
             doc.setFont(undefined, 'bold');
             doc.setFontSize(13);
             doc.setTextColor(212, 200, 142);
-            doc.text('[>>] TUS PROXIMOS PASOS', marginX, y);
+            doc.text('Tus Próximos Pasos', marginX, y);
             y += 8;
 
             doc.setFont(undefined, 'normal');
             doc.setFontSize(10);
             doc.setTextColor(80, 80, 80);
-            doc.text('1. Confirma tu HORARIO elegido (mañana, tarde, noche)', marginX + 2, y);
+            doc.text('1. Confirma tu horario elegido', marginX + 2, y);
             y += 5;
-            doc.text('2. Realiza el PAGO del primer mes ($' + total.toFixed(2) + ')', marginX + 2, y);
+            doc.text('2. Realiza el pago del primer mes ($' + total.toFixed(2) + ')', marginX + 2, y);
             y += 5;
             doc.text('3. Recibe INSTRUCCIONES de acceso + link a plataforma', marginX + 2, y);
             y += 5;
