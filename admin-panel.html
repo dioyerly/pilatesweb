@@ -750,7 +750,7 @@
                 doc.setFont(undefined, 'bold');
                 doc.setFontSize(11);
                 doc.setTextColor(90, 111, 94);
-                doc.text('DISPONIBILIDAD: ' + selectedDays.join(', '), marginX, y);
+                doc.text('Disponibilidad: ' + selectedDays.join(', '), marginX, y);
                 y += 7;
             }
 
@@ -797,7 +797,7 @@
 
             if (discountPercent > 0) {
                 doc.setTextColor(220, 53, 69);
-                doc.text(`DESCUENTO (${discountPercent}%): -$${discountAmount.toFixed(2)}`, marginX + 2, y);
+                doc.text(`Descuento (${discountPercent}%): -$${discountAmount.toFixed(2)}`, marginX + 2, y);
                 y += 6;
             }
 
@@ -810,7 +810,7 @@
             doc.setFont(undefined, 'bold');
             doc.setFontSize(12);
             doc.setTextColor(212, 200, 142);
-            doc.text(`TOTAL MENSUAL: $${total.toFixed(2)}`, marginX + 2, y);
+            doc.text(`Total mensual: $${total.toFixed(2)}`, marginX + 2, y);
             y += 8;
             doc.setTextColor(80, 80, 80);
 
@@ -887,7 +887,7 @@
 
             doc.setFont(undefined, 'bold');
             doc.setFontSize(13);
-            doc.setTextColor(212, 200, 142);
+            doc.setTextColor(90, 111, 94);
             doc.text('Tus Próximos Pasos', marginX, y);
             y += 8;
 
