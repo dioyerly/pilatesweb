@@ -644,42 +644,51 @@
             const pageWidth = doc.internal.pageSize.getWidth();
             const marginX = 20;
             const marginR = pageWidth - 20;
-            let y = 15;
+            let y = 20;
 
-            // FUNCIÓN AUXILIAR para agregar secciones
-            const addSection = (title, color = '1f2937') => {
-                doc.setFont(undefined, 'bold');
-                doc.setFontSize(13);
-                doc.setTextColor(parseInt(color.substr(0, 2), 16), parseInt(color.substr(2, 2), 16), parseInt(color.substr(4, 2), 16));
-                doc.text(title, marginX, y);
+            // COLORES
+            const colorPrimary = [22, 163, 74]; // #16a34a verde
+            const colorDark = [31, 41, 55]; // #1f2937 gris oscuro
+            const colorGold = [212, 200, 142]; // #d4c88e dorado
+            const colorGray = [107, 114, 128]; // #6b7280 gris
+            const colorBorder = [229, 231, 235]; // #e5e7eb gris muy claro
+
+            // FUNCIONES AUXILIARES
+            const addSeparator = () => {
+                doc.setDrawColor(...colorBorder);
+                doc.setLineWidth(0.5);
+                doc.line(marginX, y, marginR, y);
                 y += 8;
-                doc.setFont(undefined, 'normal');
-                doc.setFontSize(10);
-                doc.setTextColor(80, 80, 80);
+            };
+
+            const addSectionTitle = (emoji, title) => {
+                y += 12; // Espacio antes
+                doc.setFont(undefined, 'bold');
+                doc.setFontSize(14);
+                doc.setTextColor(...colorPrimary);
+                doc.text(`${emoji} ${title}`, marginX, y);
+                y += 10;
             };
 
             // HEADER
             doc.setFont(undefined, 'bold');
             doc.setFontSize(32);
-            doc.setTextColor(212, 200, 142);
+            doc.setTextColor(...colorGold);
             doc.text('ARA TRAINER', marginX, y);
             y += 12;
 
             doc.setFont(undefined, 'normal');
-            doc.setFontSize(12);
-            doc.setTextColor(90, 111, 94);
+            doc.setFontSize(11);
+            doc.setTextColor(...colorDark);
             doc.text('Tu Plan Personalizado de Transformación', marginX, y);
-            y += 2;
-            doc.setFontSize(9);
-            doc.setTextColor(130, 130, 130);
+            y += 4;
+            doc.setFontSize(10);
+            doc.setTextColor(...colorGray);
             doc.text('Pilates Online + Nutrición', marginX, y);
-            y += 12;
+            y += 14;
 
             // LÍNEA DECORATIVA
-            doc.setDrawColor(212, 200, 142);
-            doc.setLineWidth(1.5);
-            doc.line(marginX, y, marginR, y);
-            y += 8;
+            addSeparator();
 
             // INTRODUCCIÓN PERSONAL
             doc.setFont(undefined, 'bold');
