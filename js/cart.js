@@ -175,68 +175,179 @@ function downloadPdf() {
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
     const marginX = 20;
-    let y = 25;
+    const marginR = pageWidth - 20;
+    let y = 12;
 
-    doc.setFontSize(20);
+    // LOGO VISUAL - Círculos verdes
+    const circleSize = 8;
+    const circleGap = 3;
+    const circleY = y + 2;
+    const startX = marginX;
+
+    doc.setFillColor(22, 163, 74);
+    for (let i = 0; i < 5; i++) {
+        doc.circle(startX + (i * (circleSize + circleGap)), circleY, circleSize / 2, 'F');
+    }
+    y += circleSize + 8;
+
+    // BRANDING
+    doc.setFont(undefined, 'bold');
+    doc.setFontSize(26);
     doc.setTextColor(22, 163, 74);
     doc.text('ARA TRAINER', marginX, y);
-    y += 8;
-
-    doc.setFontSize(12);
-    doc.setTextColor(100);
-    doc.text(t('cart.pdf_subtitle'), marginX, y);
-    y += 12;
-
-    doc.setDrawColor(22, 163, 74);
-    doc.line(marginX, y, 190, y);
     y += 10;
 
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(12);
+    doc.setTextColor(107, 114, 128);
+    doc.text('Pilates Online + Nutricion', marginX, y);
+    y += 14;
+
+    // LÍNEA DIVISORIA
+    doc.setDrawColor(22, 163, 74);
+    doc.setLineWidth(0.8);
+    doc.line(marginX, y, marginR, y);
+    y += 8;
+
+    // FECHA/HORA/DÍA
+    const now = new Date();
+    const lang = getLang();
+    const dateFormatter = new Intl.DateTimeFormat(lang === 'it' ? 'it-IT' : 'es-AR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    const dateStr = dateFormatter.format(now);
+
+    doc.setFontSize(9);
+    doc.setTextColor(107, 114, 128);
+    doc.text(dateStr, marginX, y);
+    y += 8;
+
+    // SEPARADOR
+    doc.setDrawColor(240, 240, 240);
+    doc.setLineWidth(0.3);
+    doc.line(marginX, y, marginR, y);
+    y += 8;
+
+    // TÍTULO
+    doc.setFont(undefined, 'bold');
     doc.setFontSize(13);
     doc.setTextColor(31, 41, 55);
     doc.text(t('cart.pdf_interest_label'), marginX, y);
-    y += 8;
+    y += 10;
 
-    doc.setFontSize(11);
-    cartItems.forEach(id => {
+    // ITEMS DETALLADOS
+    const itemDescriptions = {
+        'plan-principiante': 'Acceso a clases en vivo personalizadas, guia nutricional basica, soporte por email',
+        'plan-intermedio': 'Clases en vivo 3x/semana, plan nutricional personalizado, consultas 1:1, seguimiento mensual',
+        'plan-avanzado': 'Entrenamiento personalizado, clases ilimitadas, nutricionista dedicada, seguimiento semanal',
+        'servicio-pilates': 'Sesiones en vivo adaptadas a tu nivel, mejora postural y flexibilidad',
+        'servicio-nutricion': 'Planes de alimentacion personalizados, asesoramiento integral',
+        'plan-combinado': 'Pilates + Nutricion integral, seguimiento completo',
+        'clase-prueba': 'Clase introductoria para conocer la metodologia'
+    };
+
+    const itItemDescriptions = {
+        'plan-principiante': 'Accesso a lezioni dal vivo personalizzate, guida nutrizionale di base, supporto email',
+        'plan-intermedio': 'Lezioni dal vivo 3x/settimana, piano nutrizionale personalizzato, consulenze 1:1, monitoraggio mensile',
+        'plan-avanzado': 'Allenamento personalizzato, lezioni illimitate, nutrizionista dedicata, monitoraggio settimanale',
+        'servicio-pilates': 'Sessioni dal vivo adattate al tuo livello, miglioramento posturale e flessibilita',
+        'servicio-nutricion': 'Piani alimentari personalizzati, consulenza completa',
+        'plan-combinado': 'Pilates + Nutrizione integrale, monitoraggio completo',
+        'clase-prueba': 'Lezione introduttiva per conoscere la metodologia'
+    };
+
+    const descriptions = lang === 'it' ? itItemDescriptions : itemDescriptions;
+
+    cartItems.forEach((id, idx) => {
         const item = CATALOG[id];
         if (!item) return;
-        doc.text(`• ${t(item.nameKey)} (${t(item.typeKey)})`, marginX + 4, y);
-        y += 7;
+
+        const itemName = t(item.nameKey);
+        const itemType = t(item.typeKey);
+        const desc = descriptions[id] || '';
+
+        // Nombre del item
+        doc.setFont(undefined, 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(22, 163, 74);
+        doc.text(`${idx + 1}. ${itemName}`, marginX, y);
+        y += 6;
+
+        // Tipo
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(107, 114, 128);
+        doc.text(`Categoria: ${itemType}`, marginX + 3, y);
+        y += 5;
+
+        // Descripcion
+        const descLines = doc.splitTextToSize(desc, 165);
+        doc.setFontSize(9);
+        doc.setTextColor(100, 100, 100);
+        doc.text(descLines, marginX + 3, y);
+        y += descLines.length * 4.5;
+
+        y += 3;
     });
 
+    // MODALIDAD PRESENCIAL
     if (cartPresencial.checked) {
-        doc.text(t('cart.pdf_presencial_label'), marginX + 4, y);
+        y += 2;
+        doc.setFont(undefined, 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(22, 163, 74);
+        doc.text(t('cart.pdf_presencial_label'), marginX, y);
         y += 7;
     }
 
+    // COMENTARIO DEL CLIENTE
     const note = cartNote.value.trim();
     if (note) {
-        y += 5;
-        doc.setFontSize(13);
+        y += 3;
+        doc.setFont(undefined, 'bold');
+        doc.setFontSize(11);
         doc.setTextColor(31, 41, 55);
         doc.text(t('cart.pdf_comment_label'), marginX, y);
-        y += 8;
+        y += 6;
 
-        doc.setFontSize(11);
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(80, 80, 80);
         const noteLines = doc.splitTextToSize(note, 165);
-        doc.text(noteLines, marginX + 4, y);
-        y += noteLines.length * 7;
+        doc.text(noteLines, marginX + 3, y);
+        y += noteLines.length * 5;
     }
 
-    y += 10;
-    doc.setDrawColor(229, 231, 235);
-    doc.line(marginX, y, 190, y);
+    // ESPACIO
     y += 10;
 
-    doc.setFontSize(10);
+    // LÍNEA FINAL
+    doc.setDrawColor(22, 163, 74);
+    doc.setLineWidth(0.8);
+    doc.line(marginX, y, marginR, y);
+    y += 8;
+
+    // FOOTER
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(9);
     doc.setTextColor(107, 114, 128);
-    const today = new Date().toLocaleDateString(getLang() === 'it' ? 'it-IT' : 'es-AR');
-    doc.text(`${t('cart.pdf_generated_on')} ${today}`, marginX, y);
-    y += 6;
-    doc.text('Contacto/Contatto: +39 389 1131525  |  aranircamarl@gmail.com', marginX, y);
+    doc.text('ARA TRAINER | Pilates Online + Nutricion', marginX, y);
+    y += 5;
+    doc.text('WhatsApp: +39 389 1131525', marginX, y);
+    y += 4;
+    doc.text('Email: aranircamarl@gmail.com', marginX, y);
+    y += 4;
+    doc.text('Website: www.ara-trainer.com', marginX, y);
 
-    doc.save('ara-trainer-resumen.pdf');
+    const filename = lang === 'it' ? 'ara-trainer-richiesta.pdf' : 'ara-trainer-consulta.pdf';
+    doc.save(filename);
 }
 
 document.querySelectorAll('.btn-add-cart').forEach(btn => {
