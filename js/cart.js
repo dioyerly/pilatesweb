@@ -223,36 +223,31 @@ async function sendWhatsappWithPlanData(planPrincipal, planDias, planDuracion, p
         const lang = getLang();
         const descriptions = lang === 'it' ? itItemDescriptions : itemDescriptions;
 
-        // Construir mensaje resumido (solo ID y plan básico)
-        let message = `${t('cart.whatsapp_greeting')}\n\n`;
+        // MENSAJE PÚBLICO para WhatsApp (solo información del cliente, sin datos sensibles)
+        let publicMessage = `${t('cart.whatsapp_greeting')}\n\n`;
 
         // Resumen simple del plan
         const planName = planPrincipal.charAt(0).toUpperCase() + planPrincipal.slice(1);
-        message += `📋 *Mi Interés:*\n`;
-        message += `Plan ${planName}\n`;
-        message += `${planDias} días/semana - ${planDuracion} min sesión\n`;
+        publicMessage += `📋 *Mi Interés:*\n`;
+        publicMessage += `Plan ${planName}\n`;
+        publicMessage += `${planDias} días/semana - ${planDuracion} min sesión\n`;
 
         // Modalidad presencial
         if (cartPresencial.checked) {
-            message += `\n📍 ${t('cart.whatsapp_presencial_line')}`;
+            publicMessage += `\n📍 ${t('cart.whatsapp_presencial_line')}`;
         }
 
         // Comentarios del cliente
         const note = cartNote.value.trim();
         if (note) {
-            message += `\n\n💬 *COMENTARIOS:*\n${note}`;
+            publicMessage += `\n\n💬 *COMENTARIOS:*\n${note}`;
         }
 
-        // ID de consulta
-        message += `\n\n🆔 *ID de Consulta: ${consultationId}*`;
+        // NO incluir ID ni link del panel en el mensaje público
+        publicMessage += `\n\n${t('cart.whatsapp_closing')}`;
 
-        // Link al panel privado
+        // Guardar consulta en backend CON datos privados (ID, panel link, datos del plan)
         const panelLink = `${window.location.origin}/admin-panel.html?id=${consultationId}`;
-        message += `\n📋 Panel de respuesta: ${panelLink}`;
-
-        message += `\n\n${t('cart.whatsapp_closing')}`;
-
-        // Guardar consulta en Firebase CON datos del plan
         await saveConsultation({
             consultationId: consultationId,
             items: cartItems,
@@ -260,7 +255,7 @@ async function sendWhatsappWithPlanData(planPrincipal, planDias, planDuracion, p
             note: note,
             language: lang,
             panelLink: panelLink,
-            // Datos del plan personalizado
+            // Datos del plan personalizado (privados)
             plan: planPrincipal,
             dias: planDias,
             duracion: planDuracion,
@@ -268,12 +263,19 @@ async function sendWhatsappWithPlanData(planPrincipal, planDias, planDuracion, p
             objetivo: planObjetivo,
             peso: planPeso,
             altura: planAltura,
-            notasPersonalizacion: planNotas
+            notasPersonalizacion: planNotas,
+            clientMessage: publicMessage
         });
 
-        // Abrir WhatsApp
-        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-        window.open(url, '_blank');
+        // Abrir WhatsApp con mensaje público (sin datos sensibles)
+        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(publicMessage)}`;
+
+        // Para móvil, usar protocolo de WhatsApp si está disponible
+        if (/Mobile|Android|iPhone/.test(navigator.userAgent)) {
+            window.location.href = url;
+        } else {
+            window.open(url, '_blank');
+        }
 
         // Limpiar carrito después de enviar
         setTimeout(() => {
@@ -529,39 +531,49 @@ async function sendSimpleCartWhatsapp() {
         const consultationId = generateConsultationId();
         const lang = getLang();
 
-        let message = `${t('cart.whatsapp_greeting')}\n\n`;
-        message += `📋 *${t('cart.title')}:*\n`;
+        // MENSAJE PÚBLICO para WhatsApp (solo información del cliente, sin datos sensibles)
+        let publicMessage = `${t('cart.whatsapp_greeting')}\n\n`;
+        publicMessage += `📋 *${t('cart.title')}:*\n`;
 
         buildSummaryLines().forEach(line => {
-            message += line + '\n';
+            publicMessage += line + '\n';
         });
 
         if (cartPresencial.checked) {
-            message += `\n📍 ${t('cart.whatsapp_presencial_line')}`;
+            publicMessage += `\n📍 ${t('cart.whatsapp_presencial_line')}`;
         }
 
         const note = cartNote.value.trim();
         if (note) {
-            message += `\n\n💬 *${t('cart.comments') || 'COMENTARIOS'}:*\n${note}`;
+            publicMessage += `\n\n💬 *${t('cart.comments') || 'COMENTARIOS'}:*\n${note}`;
         }
 
-        message += `\n\n🆔 *ID: ${consultationId}*`;
-        const panelLink = `${window.location.origin}/admin-panel.html?id=${consultationId}`;
-        message += `\n📋 Panel: ${panelLink}`;
-        message += `\n\n${t('cart.whatsapp_closing')}`;
+        // NO incluir ID ni link del panel en el mensaje público
+        publicMessage += `\n\n${t('cart.whatsapp_closing')}`;
 
+        // Guardar consulta en backend CON ID y link (privado, solo para propietario)
+        const panelLink = `${window.location.origin}/admin-panel.html?id=${consultationId}`;
         await saveConsultation({
             consultationId,
             items: cartItems,
             presencial: cartPresencial.checked,
             note: note,
             language: lang,
-            panelLink: panelLink
+            panelLink: panelLink,
+            clientMessage: publicMessage
         });
 
-        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-        window.open(url, '_blank');
+        // Abrir WhatsApp con mensaje público (sin datos sensibles)
+        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(publicMessage)}`;
 
+        // Para móvil, usar protocolo de WhatsApp si está disponible
+        if (/Mobile|Android|iPhone/.test(navigator.userAgent)) {
+            window.location.href = url;
+        } else {
+            window.open(url, '_blank');
+        }
+
+        // Limpiar carrito después de 2 segundos
         setTimeout(() => {
             cartItems = [];
             saveCart([]);
@@ -569,7 +581,7 @@ async function sendSimpleCartWhatsapp() {
             cartPresencial.checked = false;
             renderAll();
             closeDrawer();
-        }, 1000);
+        }, 2000);
 
     } catch (error) {
         console.error('Error sending consultation:', error);
