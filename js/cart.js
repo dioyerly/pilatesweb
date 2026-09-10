@@ -306,7 +306,7 @@ async function sendWhatsappWithPlanData(planPrincipal, planDias, planDuracion, p
             document.getElementById('cart-form-content').style.display = 'none';
             renderAll();
             closeDrawer();
-            alert('✅ Consulta enviada y PDF descargado. Ahora abre WhatsApp para confirmar tu consulta.');
+            alert('✅ Consulta enviada. Abre WhatsApp para confirmar.');
         }, 500);
 
     } catch (error) {
